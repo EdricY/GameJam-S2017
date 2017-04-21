@@ -1,7 +1,7 @@
 # GameJam-S2017
 ## A Dimming Matter
 Proposed Themes: 
-### * all about the lighting	6
+* ### all about the lighting	6
 * pausing has consequences	3 
 * not as it seems	3 
 * try it again. slowly.	2 
