@@ -5,10 +5,10 @@ import java.awt.Graphics;
 
 import game.gfx.Screen;
 
-public class Area {
+public class Tile {
 	
 	int x, y, w, h;
-	public Area(int x, int y, int w, int h){
+	public Tile(int x, int y, int w, int h){
 		this.x = x;
 		this.y = y;
 		this.w = w;
