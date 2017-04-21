@@ -4,6 +4,6 @@
 	<classpathentry kind="src" path="resrc"/>
 	<classpathentry kind="src" path="lib"/>
 	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre1.8.0_121"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
