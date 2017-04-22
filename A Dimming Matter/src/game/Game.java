@@ -338,21 +338,21 @@ public class Game extends Canvas implements Runnable {
 		g2.setStroke(new BasicStroke(7));
 		if(stage == Stage.PAUSE){
 		g.setColor(Color.GRAY);
-		for(int ypos = 100; ypos <= 400; ypos+=60)
+		for(int ypos = 125; ypos <= 425; ypos+=60)
 			g.drawLine(250, ypos, 550, ypos);
 		g.setColor(Color.GREEN);
 		if (upspeed > 0)
-			g.drawLine(250, 100, 250+60*upspeed, 100);
+			g.drawLine(250, 125, 250+60*upspeed, 125);
 		if (upmaxhealth > 0)
-		g.drawLine(250, 160, 250+60*upmaxhealth, 160);
+		g.drawLine(250, 185, 250+60*upmaxhealth, 185);
 		if (uppower > 0)
-			g.drawLine(250, 220, 250+60*uppower, 220);
+			g.drawLine(250, 245, 250+60*uppower, 245);
 		if (upammoconserve > 0)
-			g.drawLine(250, 280, 250+60*upammoconserve, 280);
+			g.drawLine(250, 305, 250+60*upammoconserve, 305);
 		if (upcrit > 0)
-			g.drawLine(250, 340, 250+60*upcrit, 340);
+			g.drawLine(250, 365, 250+60*upcrit, 365);
 		if (upfirerate > 0)
-			g.drawLine(250, 400, 250+60*upfirerate, 400);
+			g.drawLine(250, 425, 250+60*upfirerate, 425);
 		}
 		
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
@@ -483,8 +483,21 @@ public class Game extends Canvas implements Runnable {
 			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case PAUSE:
-			if (buttons.get(BN.PLAY).isClicked()){
-			
+			//UPSPEED, UPHP, UPPOW, UPAMMOCONS, UPCRIT, UPFIRERATE;
+			if (buttons.get(BN.UPSPEED).isClicked()){
+				if (player.getMoney() > 1){
+					
+				}
+			}
+			if (buttons.get(BN.UPHP).isClicked()){
+			}
+			if (buttons.get(BN.UPPOW).isClicked()){
+			}
+			if (buttons.get(BN.UPAMMOCONS).isClicked()){
+			}
+			if (buttons.get(BN.UPCRIT).isClicked()){
+			}
+			if (buttons.get(BN.UPFIRERATE).isClicked()){
 			}
 			fog.update(mouseHoverX, mouseHoverY, 500);
 			break;
@@ -581,6 +594,12 @@ public class Game extends Canvas implements Runnable {
 	public void togglePause(){
 		if (this.stage == Stage.LEVEL){
 			fog.startFlash(100);
+			buttons.get(BN.UPSPEED).state = Button.States.ENABLED;
+			buttons.get(BN.UPHP).state = Button.States.ENABLED;
+			buttons.get(BN.UPPOW).state = Button.States.ENABLED;
+			buttons.get(BN.UPAMMOCONS).state = Button.States.ENABLED;
+			buttons.get(BN.UPCRIT).state = Button.States.ENABLED;
+			buttons.get(BN.UPFIRERATE).state = Button.States.ENABLED;
 			this.stage = Stage.PAUSE;
 		}
 		else if (this.stage == Stage.PAUSE)
