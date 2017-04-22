@@ -33,5 +33,4 @@ public class AmmoPack implements GridObj{
 	public String getType() {
 		return "/ammo.png";
 	}
-
 }

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import game.gfx.Screen;
+import java.util.*;
 
 public class Wall implements GridObj{
 	
@@ -30,7 +31,14 @@ public class Wall implements GridObj{
 	}
 
 	public String getType() {
-		return "/wall.png";
+		int randomInd = ((int)Math.random() * 3);
+		if (randomInd == 0){
+			return "/wall0.png";
+		} else if (randomInd == 1) {
+			return "/wall1.png";
+		} else {
+			return "/wall2.png";
+		}
+//		return "/wall0.png";
 	}
-
 }

@@ -8,7 +8,7 @@ import game.gfx.Screen;
 public class Enemy {
 	
 	int x, y, w, h, health;
-	boolean alive;
+	boolean alive, agro;
 	
 	public Enemy(int x, int y){
 		this.x = x;
@@ -17,6 +17,7 @@ public class Enemy {
 		this.h = 8;
 		this.health = 100;
 		this.alive = true;
+		this.agro = false;
 		EntityGlobals.addEnemy(this);
 	}
 	
@@ -28,9 +29,14 @@ public class Enemy {
 		if (this.health - damage < 0){
 			this.health = 0;
 			this.alive = false;
+			killEnemy();
 		} else {
 			this.health -= damage;
 		}
+	}
+	
+	private void killEnemy(){
+		EntityGlobals.removeEnemy( this );
 	}
 	
 	public int getX(){
