@@ -104,9 +104,10 @@ public class PlayerObj {
 			Game.offsetX +=speed;
 		if(mapy + Game.offsetY < Game.HEIGHT/4)
 			Game.offsetY +=speed;
-		
-		if (((Tile)playerTile()).getAmmo() > 0)
-			((Tile)playerTile()).addAmmo(this);
+		if(playerTile() != null && playerTile().getType()=="/tile.png"){
+			if (((Tile)playerTile()).getAmmo() > 0)
+				((Tile)playerTile()).addAmmo(this);
+		}
 	}
 	public void draw(Graphics g){ 
 //		g.setColor(Color.WHITE);

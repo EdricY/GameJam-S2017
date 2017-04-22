@@ -28,7 +28,6 @@ import game.entity.GridObj;
 import game.entity.PlayerObj;
 import game.entity.Tile;
 import game.entity.Wall;
-import game.entity.EntityGlobals;
 import game.gfx.Button;
 import game.gfx.Button.States;
 import game.gfx.ChatBox;
@@ -55,7 +54,6 @@ import sun.audio.AudioStream;
  * @author AJ
  */
 
-@SuppressWarnings("restriction")
 public class Game extends Canvas implements Runnable {
 
 	/**

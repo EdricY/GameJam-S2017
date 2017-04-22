@@ -34,7 +34,12 @@ public class EntityGlobals {
 					Tile t = new Tile(i, j);
 					t.setAmmo(12);
 					mapArray[i][j] = t;
-					enemyList.add(new Enemy(i*30, j*30));
+				} else if (currentRound < 12) { 
+					Tile t = new Tile(i, j);
+					mapArray[i][j] = t;
+					if((int)(Math.random() * (60 - (currentRound * 5))) == 0){
+						enemyList.add(new Enemy(i*30, j*30));
+					}
 				} else {
 					mapArray[i][j] = new Tile(i, j);
 				}
