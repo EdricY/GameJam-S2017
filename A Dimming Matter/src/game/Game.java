@@ -21,10 +21,12 @@ import javax.swing.JFrame;
 import game.entity.EntityGlobals;
 import game.entity.Fog;
 import game.entity.GridObj;
+import game.entity.PlayerObj;
 import game.entity.EntityGlobals;
 import game.gfx.Button;
 import game.gfx.Button.States;
 import game.gfx.ChatBox;
+import game.gfx.Font;
 import game.gfx.FontJump;
 import game.gfx.ProgressBar;
 import game.gfx.Screen;
@@ -135,6 +137,16 @@ public class Game extends Canvas implements Runnable {
 	int[][] brightenmap;
 	
 	public boolean backspace;
+	public boolean up;
+	public boolean down;
+	public boolean left;
+	public boolean right;
+	public boolean space;
+	public boolean spacePrev;
+	int offsetX = 0;
+	int offsetY = 0;
+	
+	PlayerObj player;
 	
 	/**
 	 * Creates the Game class
@@ -231,9 +243,10 @@ public class Game extends Canvas implements Runnable {
 			GridObj[][] ma = EntityGlobals.getMapArray();
 			for (int i = 0; i < ma.length; i++){
 				for (int j = 0; j < ma[0].length; j++){
-					
+					screen.render(i * 30, j * 30, ma[i][j].getType());
 				}
 			}
+			screen.render(player.getX(), player.getY(), "/player.png");
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -275,6 +288,10 @@ public class Game extends Canvas implements Runnable {
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
+		if (stage == Stage.LEVEL){ // draw UI
+			g.setColor(Color.YELLOW);
+			g.drawString("bombs: " +Integer.toString(player.getBombs()), 300, 10);
+		}
 //		switch (stage){
 //		case LEVEL:
 //			GridObj[][] ma = EntityGlobals.getMapArray();
@@ -365,6 +382,9 @@ public class Game extends Canvas implements Runnable {
 			break;
 		case LEVEL:
 			if (mp3player.isIdle()) mp3player.play();
+			player.update(up, down, left, right);
+			
+			fog.update(player.getX(), player.getY(), 300);
 			break;
 		}
 		if(fj != null && !fj.isDone()) fj.tick();
@@ -482,6 +502,7 @@ public class Game extends Canvas implements Runnable {
 		EntityGlobals.resetMap();	
 		
 		fog = new Fog();
+		player = new PlayerObj(0,0);
 		
 		}
 	

@@ -25,7 +25,7 @@ public class Wall implements GridObj{
 	}
 
 	public String getType() {
-		return "Wall";
+		return "/wall.png";
 	}
 
 }

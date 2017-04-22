@@ -54,7 +54,7 @@ public class Tile implements GridObj {
 	}
 
 	public String getType() {
-		return "Tile";
+		return "/tile.png";
 	}
 
 }

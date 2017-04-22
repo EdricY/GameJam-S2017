@@ -7,17 +7,22 @@ import game.gfx.Screen;
 
 public class PlayerObj {
 	
-	int x, y, w, h, health, ammo, bomb, range;
+	int mapx, mapy, screenx, screeny, w, h, health, ammo, bomb, range, speed;
+	Direction direction;
 	
-	public PlayerObj(int x, int y){
-		this.x = x;
-		this.y = y;
+	public PlayerObj(int mapx, int mapy){
+		this.mapx = mapx;
+		this.mapy = mapy;
+		this.screenx = 0;//480;
+		this.screeny = 0;//270;
 		this.w = 24;
 		this.h = 24;
 		this.health = 100;
 		this.ammo = 12;
 		this.bomb = 0;
 		this.range = 10;
+		this.direction = Direction.UP;
+		this.speed = 1;
 	}
 	
 	public int getHealth(){
@@ -26,6 +31,10 @@ public class PlayerObj {
 	
 	public int getAmmo(){
 		return this.ammo;
+	}
+	
+	public int getBombs(){
+		return this.bomb;
 	}
 	
 	public void addAmmo(int ammoAdded){
@@ -41,15 +50,24 @@ public class PlayerObj {
 //	}
 	
 	public int getX(){
-		return this.x;
+		return this.mapx;
 	}
 	
 	public int getY(){
-		return this.y;
+		return this.mapy;
 	}
 	
+	public Direction getDir(){
+		return this.direction;
+	}
+	public void update(boolean up, boolean down, boolean left, boolean right){
+		if(up) 		mapy-=speed;
+		if(down)	mapy+=speed;
+		if(left)	mapx-=speed;
+		if(right)	mapx+=speed;
+	}
 	public void draw(Graphics g){ 
-		g.setColor(Color.WHITE);
-		g.fillRect(x, y, w, h);
+//		g.setColor(Color.WHITE);
+//		g.fillRect(x, y, w, h);
 	}
 }

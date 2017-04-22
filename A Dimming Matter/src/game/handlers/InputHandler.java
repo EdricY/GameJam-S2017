@@ -44,6 +44,26 @@ public class InputHandler implements KeyListener {
 			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS)
 				game.backspace = true;
 		}
+		if (e.getKeyCode() == KeyEvent.VK_UP){
+			if (game.stage == Stage.LEVEL)
+				game.up = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			if (game.stage == Stage.LEVEL)
+				game.down = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+			if (game.stage == Stage.LEVEL)
+				game.left = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+			if (game.stage == Stage.LEVEL)
+				game.right = true;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE){
+			if (game.stage == Stage.LEVEL)
+				game.space = true;
+		}
 	}
 
 	@Override
@@ -73,6 +93,26 @@ public class InputHandler implements KeyListener {
 					}
 				}
 			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_UP){
+			if (game.stage == Stage.LEVEL)
+				game.up = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+			if (game.stage == Stage.LEVEL)
+				game.down = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+			if (game.stage == Stage.LEVEL)
+				game.left = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+			if (game.stage == Stage.LEVEL)
+				game.right = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE){
+			if (game.stage == Stage.LEVEL)
+				game.space = false;
 		}
 	}
 
