@@ -10,6 +10,9 @@ public class EntityGlobals {
 	static int rowCount = 6 * 9 + 1;
 	static int colCount = 6 * 16 + 1;
 	
+	public static int getRoundNum(){
+		return roundNumber;
+	}
 	
 	public static void resetMap(){
 		roundNumber += 1;

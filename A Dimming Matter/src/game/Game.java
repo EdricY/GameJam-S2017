@@ -331,6 +331,7 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 		/**/
+		System.out.println("a");
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(7));
@@ -356,6 +357,7 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL){ // draw UI
 			BufferedImage shot = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
+			System.out.println("b");
 			BufferedImage ref = screen.lookupSprite("/circle.png").image;
 			for (int y = 0; y < shot.getWidth(); y++){
 	            for (int x = 0; x < shot.getHeight(); x++){

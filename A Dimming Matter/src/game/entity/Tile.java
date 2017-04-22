@@ -85,8 +85,11 @@ public class Tile implements GridObj {
 	public String getPath() {
 		if (ammo == 0)
 			return "/tile.png";
-		else
+		else if (healthOrb == true){
+			return "/healthOrb";
+		} else {
 			return "/ammo.png";
+		}
 	}
 
 	@Override
