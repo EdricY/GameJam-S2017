@@ -4,7 +4,7 @@ import game.Game;
 
 public class Boss extends Enemy{
 	public int flee;
-	int x, y, w, h, health, maxhealth, speed;
+	int x, y, w, h, health, maxhealth, speed, hellPortalCounter;
 	boolean alive, agro;
 
 	public Boss(int x, int y){
@@ -15,6 +15,7 @@ public class Boss extends Enemy{
 		speed = 1;
 		this.w = 32;
 		this.h = 32;
+		this.hellPortalCounter = 0;
 	}
 	public String getType(){
 		return "Boss";
@@ -57,6 +58,23 @@ public class Boss extends Enemy{
 		if (taxidist < 1000) agro = true;
 		else agro = false;
 		
+		if ( (agro == true) && ( this.hellPortalCounter < EntityGlobals.getRoundNum() )){
+			for (int i = 0; i < 3; i++){
+				int rowToCheck = (this.x / 30) - 1;
+				int colToCheck = (this.y / 30) + (-1 + i);
+				if(rowToCheck >= 0 && colToCheck >= 0)
+				if (EntityGlobals.getMapArray()[rowToCheck][colToCheck].getType() == "/Tile.png" ){
+					EntityGlobals.getMapArray()[rowToCheck][colToCheck] = new HellPortal(rowToCheck, colToCheck);
+				}
+			}
+			for (int i = 0; i < 3; i++){
+				int rowToCheck = (this.x / 30) + 1;
+				int colToCheck = (this.y / 30) + (-1 + i);
+				if (EntityGlobals.getMapArray()[rowToCheck][colToCheck].getType() == "/Tile.png" ){
+					EntityGlobals.getMapArray()[rowToCheck][colToCheck] = new HellPortal(rowToCheck, colToCheck);				}
+			}
+		}
+		
 		if (agro && flee==0){
 			up = playerY < this.y;
 			down = playerY > this.y;
@@ -84,6 +102,7 @@ public class Boss extends Enemy{
 		}
 		return false;
 	}
+	
 	public void update(boolean up, boolean down, boolean left, boolean right){
 		if(right)	x+=speed;
 		//R-side collision
