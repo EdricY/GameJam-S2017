@@ -7,8 +7,8 @@ public class EntityGlobals {
 	static ArrayList<Wall> wallList;
 	static GridObj[][] mapArray;
 	static int roundNumber = 0;
-	static int rowCount = 6 * 9;
-	static int colCount = 6 * 16;
+	static int rowCount = 6 * 9 + 1;
+	static int colCount = 6 * 16 + 1;
 	
 	
 	public static void resetMap(){
@@ -22,7 +22,7 @@ public class EntityGlobals {
 	private static void populateMap( int currentRound ){
 		for (int i = 0; i < colCount; i++){
 			for (int j = 0; j < rowCount; j++){
-				if (((i % 16 == 0) && (j % 9 == 0)) || (i == 0) || (j == 0) || ((i == colCount) || (j == rowCount)) ){
+				if (((i % 16 == 0) && (j % 9 == 0)) || (i == 0) || (j == 0) || ((i == colCount - 1) || (j == rowCount - 1)) ){
 					mapArray[i][j] = new Wall(i, j);
 				} else if ((i % 16 == 0) || (j % 9 == 0)){
 					if ((int)(Math.random() * 15) < 14){
