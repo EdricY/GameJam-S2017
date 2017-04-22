@@ -37,7 +37,7 @@ public class EntityGlobals {
 				} else if (currentRound < 12) { 
 					Tile t = new Tile(i, j);
 					mapArray[i][j] = t;
-					if((int)(Math.random() * (60 - (currentRound * 5))) == 0){
+					if((int)(Math.random() * (150 - (currentRound * 15))) == 0){
 						enemyList.add(new Enemy(i*30, j*30));
 					}
 				} else {
