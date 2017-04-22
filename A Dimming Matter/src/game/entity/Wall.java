@@ -18,6 +18,10 @@ public class Wall implements GridObj{
 		this.col = col;
 	}
 	
+	public void destroyWall(){
+		EntityGlobals.getMapArray()[row][col] = new Tile(row, col);
+	}
+	
 	public void draw(Graphics g)
 	{ 
 		g.setColor(Color.GRAY);

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import game.gfx.Screen;
+import java.util.*;
 
 public class PlayerObj {
 	
@@ -47,6 +48,14 @@ public class PlayerObj {
 	
 //	public void basicAttack(int mouseX, int mouseY){
 //		
+//	}
+	
+//	private ArrayList<GridObj> getInRangeGridObjs(){
+//		ArrayList<GridObj> inRangeGridObjs = new ArrayList();
+//		int rangeChecked = 0;
+//		while (rangeChecked < this.range){
+//			this.row 
+//		}
 //	}
 	
 	public int getX(){

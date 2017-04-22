@@ -20,11 +20,9 @@ public class EntityGlobals {
 	}
 	
 	private static void populateMap( int currentRound ){
-		//Make the walls
-		int rollNum = 0;
 		for (int i = 0; i < rowCount; i++){
 			for (int j = 0; j < colCount; j++){
-				if ((i % 16 == 0) || (j % 9 == 0)){
+				if ((i % 9 == 0) || (j % 16 == 0) && (i % 9 != j % 16) && (i != 0) && (j != 0) && (i != rowCount) && (j != colCount)){
 					if (Math.random() * 15 < 14){
 						mapArray[i][j] = new Wall(i, j);
 					} else {
