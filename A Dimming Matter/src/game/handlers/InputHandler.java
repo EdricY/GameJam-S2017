@@ -21,6 +21,7 @@ public class InputHandler implements KeyListener {
 
 	private final Game game;
 	public boolean space;
+	public boolean tab;
 
 	public InputHandler(Game game) {
 		game.addKeyListener(this);
@@ -66,6 +67,11 @@ public class InputHandler implements KeyListener {
 				space = true;
 				game.boom = true;
 			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_TAB){
+			if (game.stage == Stage.LEVEL || game.stage == Stage.PAUSE)
+				game.togglePause();
+			tab = true;
 		}
 	}
 
@@ -116,6 +122,9 @@ public class InputHandler implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			if (game.stage == Stage.LEVEL)
 				space = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_TAB){
+			tab = false;
 		}
 	}
 

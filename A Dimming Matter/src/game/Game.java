@@ -157,6 +157,13 @@ public class Game extends Canvas implements Runnable {
 	public int peaceTimer = 1200;
 	public static boolean nextWave = false;
 	
+	int upspeed=		0;
+	int upmaxhealth=	2;
+	int uppower=		3;
+	int upammoconserve=	4;
+	int upcrit=			5;
+	int upfirerate=		1;
+	
 	PlayerObj player;
 	Boss boss;
 	
@@ -253,6 +260,9 @@ public class Game extends Canvas implements Runnable {
 		case GAMEOVER:
 			screen.render(0, 0, "/gameover.png");
 			break;
+		case PAUSE:
+			screen.render(0, 0, "/pause.png");
+			break;
 		case LEVEL:
 			screen.render(0, 0, "/blank.png");
 			GridObj[][] ma = EntityGlobals.getMapArray();
@@ -324,6 +334,26 @@ public class Game extends Canvas implements Runnable {
 		}
 		/**/
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setStroke(new BasicStroke(7));
+		if(stage == Stage.PAUSE){
+		g.setColor(Color.GRAY);
+		for(int ypos = 100; ypos <= 400; ypos+=60)
+			g.drawLine(250, ypos, 550, ypos);
+		g.setColor(Color.GREEN);
+		if (upspeed > 0)
+			g.drawLine(250, 100, 250+60*upspeed, 100);
+		if (upmaxhealth > 0)
+		g.drawLine(250, 160, 250+60*upmaxhealth, 160);
+		if (uppower > 0)
+			g.drawLine(250, 220, 250+60*uppower, 220);
+		if (upammoconserve > 0)
+			g.drawLine(250, 280, 250+60*upammoconserve, 280);
+		if (upcrit > 0)
+			g.drawLine(250, 340, 250+60*upcrit, 340);
+		if (upfirerate > 0)
+			g.drawLine(250, 400, 250+60*upfirerate, 400);
+		}
 		
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL){ // draw UI
@@ -346,7 +376,7 @@ public class Game extends Canvas implements Runnable {
 			g.drawString("Ammo: " +Integer.toString(player.getAmmo()), 200, 10);
 			g.drawString("Health: " +Integer.toString(player.getHealth()), 100, 10);
 			
-			Graphics2D g2 = (Graphics2D) g;
+			g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
 			ArrayList<Enemy> enemyChangeBuffer = new ArrayList<Enemy>();
 			for (Enemy e : EntityGlobals.getEnemyList()){
@@ -364,18 +394,6 @@ public class Game extends Canvas implements Runnable {
 			}
 			EntityGlobals.setEnemyList(enemyChangeBuffer);
 		}
-//		switch (stage){
-//		case LEVEL:
-//			GridObj[][] ma = EntityGlobals.getMapArray();
-//			for (int i = 0; i < ma.length; i++)
-//			{
-//				for (int j = 0; j < ma[0].length; j++)
-//				{
-//					ma[i][j].draw(g);
-//				}
-//			}
-//			break;
-//		}
 		bs.show();
 	}
 
@@ -463,6 +481,12 @@ public class Game extends Canvas implements Runnable {
 				buttons.get(BN.CREDITS).state = States.ENABLED;
 			}
 			fog.update(mouseHoverX, mouseHoverY, 300);
+			break;
+		case PAUSE:
+			if (buttons.get(BN.PLAY).isClicked()){
+			
+			}
+			fog.update(mouseHoverX, mouseHoverY, 500);
 			break;
 		case LEVEL:
 			if (mp3player.isIdle()) mp3player.play();
@@ -554,6 +578,15 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 	}
+	public void togglePause(){
+		if (this.stage == Stage.LEVEL){
+			fog.startFlash(100);
+			this.stage = Stage.PAUSE;
+		}
+		else if (this.stage == Stage.PAUSE)
+			this.stage = Stage.LEVEL;
+	}
+	
 	public void shoot(int mouseX, int mouseY, int power){
 		if (shotTimer > 0) return;
 		if (player.getAmmo() < 10) return;
@@ -683,6 +716,36 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
+		
+		buttons.add(new Button(screen, 600, 100,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPSPEED);
+		buttons.get(BN.UPSPEED).text = "+";
+		buttons.get(BN.UPSPEED).state = Button.States.HIDDEN;
+
+		buttons.add(new Button(screen, 600, 160,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPHP);
+		buttons.get(BN.UPHP).text = "+";
+		buttons.get(BN.UPHP).state = Button.States.HIDDEN;
+
+		buttons.add(new Button(screen, 600, 220,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPPOW);
+		buttons.get(BN.UPPOW).text = "+";
+		buttons.get(BN.UPPOW).state = Button.States.HIDDEN;
+		
+		buttons.add(new Button(screen, 600, 280,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPAMMOCONS);
+		buttons.get(BN.UPAMMOCONS).text = "+";
+		buttons.get(BN.UPAMMOCONS).state = Button.States.HIDDEN;
+		
+		buttons.add(new Button(screen, 600, 340,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPCRIT);
+		buttons.get(BN.UPCRIT).text = "+";
+		buttons.get(BN.UPCRIT).state = Button.States.HIDDEN;
+		
+		buttons.add(new Button(screen, 600, 400,
+				5, 5, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.UPFIRERATE);
+		buttons.get(BN.UPFIRERATE).text = "+";
+		buttons.get(BN.UPFIRERATE).state = Button.States.HIDDEN;
 		setupGame();
 	}
 	public void setupGame(){
@@ -739,7 +802,7 @@ public class Game extends Canvas implements Runnable {
 		/**
 		 * The game is at the main menu.
 		 */
-		MENU, LEVEL, INSTRUCTIONS, CREDITS, GAMEOVER;
+		MENU, LEVEL, INSTRUCTIONS, CREDITS, GAMEOVER, PAUSE;
 	}
 
 	/**
@@ -748,7 +811,7 @@ public class Game extends Canvas implements Runnable {
 	 *
 	 */
 	public enum BN {
-		PLAY, QUIT, INSTRUCTIONS, CREDITS;
+		PLAY, QUIT, INSTRUCTIONS, CREDITS, UPSPEED, UPHP, UPPOW, UPAMMOCONS, UPCRIT, UPFIRERATE;
 	}
 
 	/**
