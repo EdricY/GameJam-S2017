@@ -5,6 +5,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import game.Game;
+import game.Game.Stage;
 import game.utils.Constants;
 
 public class MouseHandler implements MouseListener, MouseMotionListener {
@@ -40,6 +41,9 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		if (e.getButton() == MouseEvent.BUTTON3 && game.stage == Stage.LEVEL && x == Integer.MIN_VALUE && y == Integer.MIN_VALUE){
+			game.boom = true;
+		}
 		x = e.getX();
 		y = e.getY();
 	}
@@ -75,7 +79,6 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	}
 
 	public void resetActions() {
-		actions = new int[Constants.MOBS_PER_LANE * Constants.LANES];
 	}
 
 	@Override
