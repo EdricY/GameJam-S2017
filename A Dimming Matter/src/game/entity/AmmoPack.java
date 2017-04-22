@@ -6,14 +6,18 @@ import java.awt.Graphics;
 
 public class AmmoPack implements GridObj{
 	
-	int x, y, w, h, ammoContained;
+	int x, y, w, h, row, col, ammoContained;
+	boolean bombContained;
 	
-	public AmmoPack(int x, int y){
-		this.x = x;
-		this.y = y;
+	public AmmoPack(int row, int col){
+		this.x = row * 30;
+		this.y = col * 30;
 		this.w = 30;
 		this.h = 30;
+		this.row = row;
+		this.col = col;
 		this.ammoContained = 12;
+		this.bombContained = (Math.random() * 16 == 0);
 	}
 	
 	public void addAmmo(PlayerObj player){
@@ -22,7 +26,7 @@ public class AmmoPack implements GridObj{
 	
 	public void draw(Graphics g)
 	{ 
-		g.setColor(Color.BLACK);
+		g.setColor(Color.BLUE);
 		g.fillRect(x, y, w, h);
 	}
 

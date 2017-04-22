@@ -7,21 +7,20 @@ import game.gfx.Screen;
 
 public class Wall implements GridObj{
 	
-	int x, y, w, h;
-	public Wall(int x, int y){
-		this.x = x;
-		this.y = y;
+	int x, y, w, h, row, col;
+	
+	public Wall(int row, int col){
+		this.x = row * 30;
+		this.y = col * 30;
 		this.w = 30;
 		this.h = 30;
-	}
-	
-	public boolean stopsLight(){
-		return this.stopsLight();
+		this.row = row;
+		this.col = col;
 	}
 	
 	public void draw(Graphics g)
 	{ 
-		g.setColor(Color.GREEN);
+		g.setColor(Color.GRAY);
 		g.fillRect(x, y, w, h);
 	}
 
