@@ -3,9 +3,6 @@ package game.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import game.gfx.Screen;
-import java.util.*;
-
 public class Wall implements GridObj{
 	
 	int x, y, w, h, row, col;

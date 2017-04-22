@@ -1,11 +1,8 @@
 package game.entity;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import game.Game;
-import game.gfx.Screen;
-import java.util.*;
 
 public class PlayerObj {
 	public int health;
@@ -22,7 +19,7 @@ public class PlayerObj {
 		this.bomb = 3;
 		this.range = 10;
 		this.direction = Direction.UP;
-		this.speed = 10;
+		this.speed = 1;
 	}
 	
 	public int getHealth(){

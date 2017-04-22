@@ -3,7 +3,6 @@ package game.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 
 public class AmmoPack{
 	

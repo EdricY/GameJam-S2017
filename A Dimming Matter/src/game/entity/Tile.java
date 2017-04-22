@@ -3,7 +3,6 @@ package game.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import game.gfx.Screen;
 import java.util.*;
 
 public class Tile implements GridObj {
@@ -36,7 +35,7 @@ public class Tile implements GridObj {
 	}
 	
 	public ArrayList<Enemy> enemiesIn(){
-		ArrayList<Enemy> listofObjects = new ArrayList();
+		ArrayList<Enemy> listofObjects = new ArrayList<Enemy>();
 		ArrayList<Enemy> listofEnemies = EntityGlobals.getEnemyList();
 		for(int i = 0; i < EntityGlobals.lenEnemyList(); i++){
 			if (contains(listofEnemies.get(i).getX(), listofEnemies.get(i).getY())){

@@ -3,9 +3,6 @@ package game.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
-import game.Game;
-import game.gfx.Screen;
-
 public class Enemy {
 	
 	int x, y, w, h, health, speed, flee;
