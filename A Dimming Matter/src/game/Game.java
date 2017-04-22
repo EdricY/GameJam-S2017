@@ -3,6 +3,7 @@ package game;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import game.entity.Fog;
 import game.gfx.Button;
 import game.gfx.Button.States;
 import game.gfx.ChatBox;
@@ -91,7 +93,7 @@ public class Game extends Canvas implements Runnable {
 	/**
 	 * The {@link BufferedImage} that is rendered to the JFrame.
 	 */
-	private static final BufferedImage image = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_RGB);
+	private static final BufferedImage image = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
 	/**
 	 * Error stream for the game. And game messages
@@ -124,6 +126,8 @@ public class Game extends Canvas implements Runnable {
 	
 	MP3 mp3player = new MP3();
 	MP3 soundeffects = new MP3();
+	Fog fog;
+	int fcount;
 	
 	public boolean backspace;
 	
@@ -201,10 +205,11 @@ public class Game extends Canvas implements Runnable {
 	private void render() {
 		final BufferStrategy bs = getBufferStrategy();
 		if (bs == null) {
-			createBufferStrategy(3); // Triple buffering!
+			createBufferStrategy(2); // Triple buffering!
 			return;
 		}
-
+		final Graphics g = bs.getDrawGraphics();
+		
 		switch (stage) {
 		default:
 		case MENU:
@@ -228,13 +233,26 @@ public class Game extends Canvas implements Runnable {
 		for (final TextBox t : textboxes.getAll()) {
 			t.render();
 		}
+		
 		for (int pix = 0; pix < screen.pixels.length; pix++) {
 			pixels[pix] = screen.pixels[pix];
 		}
-		final Graphics g = bs.getDrawGraphics();
+		
+		BufferedImage bimg = Game.image;
+		for (int y = 0; y < Game.image.getWidth(); y++) {
+            for (int x = 0; x < Game.image.getHeight(); x++) {
+            	Color c = new Color(Game.image.getRGB(y, x));
+            	c = new Color(c.getRed(),
+            			c.getGreen(),
+            			c.getBlue(),
+            			fog.getAlpha(x, y));
+            	Game.image.setRGB(y, x, c.getRGB());
+            }
+		}
+		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
-		g.dispose();
 		bs.show();
+		
 	}
 
 	/**
@@ -243,6 +261,10 @@ public class Game extends Canvas implements Runnable {
 	 * @see Game#run()
 	 */
 	private void tick() {
+		int mouseX = mouse.getX();
+		int mouseY = mouse.getY();
+		int mouseHoverX = mouse.getHoverX();
+		int mouseHoverY = mouse.getHoverY();
 		switch (stage) {
 		default:
 		case MENU:
@@ -272,6 +294,9 @@ public class Game extends Canvas implements Runnable {
 				mp3player.play();
 				stage = Stage.LEVEL;
 			}
+			
+			fog.update(mouseHoverX, mouseHoverY, 1000);
+			
 			break;
 		case INSTRUCTIONS:
 			if (mp3player.isIdle()) mp3player.play();
@@ -283,6 +308,7 @@ public class Game extends Canvas implements Runnable {
 				buttons.get(BN.QUIT).state = States.ENABLED;
 				buttons.get(BN.CREDITS).state = States.ENABLED;
 			}
+			fog.update(mouseHoverX, mouseHoverY, 1000);
 			break;
 		case CREDITS:
 			if (mp3player.isIdle()) mp3player.play();
@@ -294,10 +320,9 @@ public class Game extends Canvas implements Runnable {
 				buttons.get(BN.QUIT).state = States.ENABLED;
 				buttons.get(BN.CREDITS).state = States.ENABLED;
 			}
+			fog.update(mouseHoverX, mouseHoverY, 1000);
 			break;
 		case LEVEL:
-			int mouseX = mouse.getX();
-			int mouseY = mouse.getY();
 			if (mp3player.isIdle()) mp3player.play();
 			break;
 		}
@@ -413,6 +438,13 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
+		
+		
+		 fog = new Fog();
+	}
+	
+	public int distsq(int x1, int y1, int x2, int y2){
+		return ( (x1-x2)*(x1-x2) ) + ( (y1-y2)*(y1-y2) );
 	}
 	
 	private void playSound(String filename) {

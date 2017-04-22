@@ -26,9 +26,9 @@ public class Screen {
 	 */
 	public int width, height;
 
-	private final ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+	public final ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 
-	private final ArrayList<SpriteSheet> spritesheets = new ArrayList<SpriteSheet>();
+	public final ArrayList<SpriteSheet> spritesheets = new ArrayList<SpriteSheet>();
 
 	/**
 	 * Creates a screen with some width and height in pixels.
@@ -44,6 +44,8 @@ public class Screen {
 		sprites.add(new Sprite("/background.png"));
 		sprites.add(new Sprite("/instructions.png"));
 		sprites.add(new Sprite("/credits.png"));
+		sprites.add(new Sprite("/fog.png"));
+		sprites.add(new Sprite("/blank.png"));
 
 		// Sprite sheets. Added here to guarantee their availability at runtime.
 		spritesheets.add(new SpriteSheet("/font.png", 26, 4));
@@ -75,6 +77,19 @@ public class Screen {
 				if ((pix != 0) && ((xPos + x) < width) && ((xPos + x) >= 0) && ((yPos + y) < height)
 						&& ((yPos + y) >= 0)) {
 					pixels[xPos + x + ((yPos + y) * width)] = pix;
+				}
+			}
+		}
+	}
+	
+	public void renderFog(int xPos, int yPos, String path) {
+		final Sprite sprite = lookupSprite(path);
+		for (int y = 0; y < sprite.height; y++) {
+			for (int x = 0; x < sprite.width; x++) {
+				final int pix = sprite.pixels[x + (y * sprite.width)];
+				if ((pix != 0) && ((xPos + x) < width) && ((xPos + x) >= 0) && ((yPos + y) < height)
+						&& ((yPos + y) >= 0)) {
+					pixels[xPos + x + ((yPos + y) * width)] = pix & 0x80FFFFFF;
 				}
 			}
 		}

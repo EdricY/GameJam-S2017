@@ -11,6 +11,9 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
 	private int x = Integer.MIN_VALUE;
 	private int y = Integer.MIN_VALUE;
+	
+	private int hoverX = Integer.MIN_VALUE;
+	private int hoverY = Integer.MIN_VALUE;
 
 	private int[] actions = new int[Constants.MOBS_PER_LANE * Constants.LANES];
 	private int lastClicked;
@@ -54,6 +57,14 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 	public int getY() {
 		return y / Game.SCALE;
 	}
+	
+	public int getHoverX() {
+		return hoverX / Game.SCALE;
+	}
+
+	public int getHoverY() {
+		return hoverY / Game.SCALE;
+	}
 
 	public int[] getActions() {
 		return actions;
@@ -75,5 +86,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
+		hoverX = e.getX();
+		hoverY = e.getY();
 	}
 }

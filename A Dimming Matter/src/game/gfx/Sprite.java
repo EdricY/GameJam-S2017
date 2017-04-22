@@ -3,6 +3,7 @@ package game.gfx;
 import game.utils.Debug;
 import game.utils.Out;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -28,6 +29,8 @@ public class Sprite {
 	 * sheet.
 	 */
 	public int[] pixels;
+	
+	public BufferedImage image;
 
 	/**
 	 * Creates a {@link Sprite} object.
@@ -36,7 +39,7 @@ public class Sprite {
 	 *            {@link String} location of the file in the JAR.
 	 */
 	public Sprite(String path) {
-		BufferedImage image = null;
+		image = null;
 
 		// try to load image (not found throws an exception).
 		try {
@@ -75,5 +78,9 @@ public class Sprite {
 		this.pixels = pixels;
 		this.width = width;
 		this.height = height;
+	}
+	
+	public void draw(Graphics g, int x, int y){
+		g.drawImage(image, x, y, null);
 	}
 }
