@@ -139,7 +139,6 @@ public class Game extends Canvas implements Runnable {
 	Fog fog;
 	int fcount;
 	int[][] brightenmap;
-	
 	public boolean backspace;
 	public boolean up;
 	public boolean down;
