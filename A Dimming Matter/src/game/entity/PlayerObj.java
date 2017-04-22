@@ -83,7 +83,10 @@ public class PlayerObj {
 			Game.offsetX +=speed;
 		if(mapy + Game.offsetY < Game.HEIGHT/4)
 			Game.offsetY +=speed;
-		
+		//R-side collision
+		if(EntityGlobals.mapArray[(mapx+12)/30][(mapy+12)/30].getType().equals("/wall.png")){
+			
+		}
 	}
 	public void draw(Graphics g){ 
 //		g.setColor(Color.WHITE);
