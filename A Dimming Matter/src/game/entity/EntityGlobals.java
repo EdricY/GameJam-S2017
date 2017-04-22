@@ -23,15 +23,18 @@ public class EntityGlobals {
 		for (int i = 0; i < colCount; i++){
 			for (int j = 0; j < rowCount; j++){
 				if (((i % 16 == 0) && (j % 9 == 0)) || (i == 0) || (j == 0) || ((i == colCount - 1) || (j == rowCount - 1)) ){
-					mapArray[i][j] = new Wall(i, j);
+					mapArray[i][j] = new Wall(i, j, true);
 				} else if ((i % 16 == 0) || (j % 9 == 0)){
 					if ((int)(Math.random() * 15) < 14){
-						mapArray[i][j] = new Wall(i, j);
+						mapArray[i][j] = new Wall(i, j, false);
 					} else {
 						mapArray[i][j] = new Tile(i, j);
 					}
-				} else if((int)(Math.random() * 100) == 0){
-					mapArray[i][j] = new AmmoPack(i, j);
+				} else if((int)(Math.random() * 30) == 0){
+					Tile t = new Tile(i, j);
+					t.setAmmo(12);
+					mapArray[i][j] = t;
+					enemyList.add(new Enemy(i*30, j*30));
 				} else {
 					mapArray[i][j] = new Tile(i, j);
 				}

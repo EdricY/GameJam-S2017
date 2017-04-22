@@ -8,8 +8,8 @@ import game.gfx.Screen;
 import java.util.*;
 
 public class PlayerObj {
-	
-	int mapx, mapy, w, h, health, ammo, bomb, range, speed;
+	public int health;
+	int mapx, mapy, w, h, ammo, bomb, range, speed;
 	Direction direction;
 	
 	public PlayerObj(int mapx, int mapy){
@@ -108,9 +108,15 @@ public class PlayerObj {
 			Game.offsetX +=speed;
 		if(mapy + Game.offsetY < Game.HEIGHT/4)
 			Game.offsetY +=speed;
+		
+		if (((Tile)playerTile()).getAmmo() > 0)
+			((Tile)playerTile()).addAmmo(this);
 	}
 	public void draw(Graphics g){ 
 //		g.setColor(Color.WHITE);
 //		g.fillRect(x, y, w, h);
+	}
+	public GridObj playerTile(){
+		return EntityGlobals.getMapArray()[getX()/30][getY()/30];
 	}
 }

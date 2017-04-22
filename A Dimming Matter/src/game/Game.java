@@ -18,10 +18,13 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import game.entity.Enemy;
 import game.entity.EntityGlobals;
 import game.entity.Fog;
 import game.entity.GridObj;
 import game.entity.PlayerObj;
+import game.entity.Tile;
+import game.entity.Wall;
 import game.entity.EntityGlobals;
 import game.gfx.Button;
 import game.gfx.Button.States;
@@ -246,6 +249,9 @@ public class Game extends Canvas implements Runnable {
 				}
 			}
 			screen.render(player.getX()+offsetX - 8, player.getY()+offsetY - 8, "/player.png");
+			for (Enemy e : EntityGlobals.getEnemyList()) 
+				screen.render(e.getX()+offsetX-8, e.getY()+offsetY -8, "/enemy.png");
+			
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -304,6 +310,7 @@ public class Game extends Canvas implements Runnable {
 		if (stage == Stage.LEVEL){ // draw UI
 			g.setColor(Color.YELLOW);
 			g.drawString("bombs: " +Integer.toString(player.getBombs()), 300, 10);
+			g.drawString("ammo: " +Integer.toString(player.getAmmo()), 200, 10);
 		}
 //		switch (stage){
 //		case LEVEL:
@@ -401,14 +408,18 @@ public class Game extends Canvas implements Runnable {
 					fog.startFlash(120);
 					player.modifyBomb(-1);
 					player.modifyHealth(-5);
+					int range = player.getHealth()/10;
+					explode(EntityGlobals.getMapArray()[player.getX()/30][player.getY()/30], range);
 				}
 				else fog.startHurtFlash(120);
 			}
 			player.update(up, down, left, right);
+			for (Enemy e : EntityGlobals.getEnemyList()) e.update(player.getX(), player.getY());
 			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			break;
 		}
 		if(fj != null && !fj.isDone()) fj.tick();
+		
 		err.tick();
 		for (final Button b : buttons.getAll()) {
 			if ((b.state == Button.States.ENABLED) || (b.state == Button.States.PRESSED)
@@ -444,6 +455,26 @@ public class Game extends Canvas implements Runnable {
 		}
 	}
 
+	private void explode(GridObj go, int power){
+		if (power == 0) return;
+		if (go.getType().equals("/tile.png")){
+			((Tile) go).setLight(1);
+			((Tile) go).dealDamage();
+			((Tile) go).setLight(0);
+			if(go.getC()+1 < 55)
+				explode(EntityGlobals.getMapArray()[go.getR()][go.getC()+1], power-1);
+			if(go.getC()-1 >= 0)
+				explode(EntityGlobals.getMapArray()[go.getR()][go.getC()-1], power-1);
+			if(go.getR()+1 < 193)
+				explode(EntityGlobals.getMapArray()[go.getR()+1][go.getC()], power-1);
+			if(go.getR()-1 >= 0)
+				explode(EntityGlobals.getMapArray()[go.getR()-1][go.getC()], power-1);
+		}
+		else if (go.getType().equals("/wall.png")){
+			((Wall) go).destroyWall();
+		}
+	}
+	
 	private void hideAll() {
 		for (final Button b : buttons.getAll()) {
 			b.state = Button.States.HIDDEN;

@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Tile implements GridObj {
 	
-	int x, y, w, h, row, col, light;
+	int x, y, w, h, row, col, light, ammo;
 	public Tile(int row, int col){
 		this.x = row * 30;
 		this.y = col * 30;
@@ -46,6 +46,20 @@ public class Tile implements GridObj {
 		return listofObjects;
 	}
 	
+	public void addAmmo(PlayerObj player){
+		player.addAmmo( this.ammo );
+		this.ammo = 0;
+		if((int)(Math.random() * 12) == 0)
+			player.modifyBomb(1);
+	}
+	
+	public void setAmmo(int num){
+		this.ammo = num;
+	}
+	
+	public int getAmmo(){
+		return this.ammo;
+	}
 	
 	public void draw(Graphics g)
 	{ 
@@ -57,9 +71,20 @@ public class Tile implements GridObj {
 		return "/tile.png";
 	}
 
-	@Override
 	public String getPath() {
-		return "/tile.png";
+		if (ammo == 0)
+			return "/tile.png";
+		else
+			return "/ammo.png";
 	}
 
+	@Override
+	public int getR() {
+		return row;
+	}
+
+	@Override
+	public int getC() {
+		return col;
+	}
 }
