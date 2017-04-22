@@ -131,6 +131,7 @@ public class Game extends Canvas implements Runnable {
 	MP3 soundeffects = new MP3();
 	Fog fog;
 	int fcount;
+	int[][] brightenmap;
 	
 	public boolean backspace;
 	
@@ -242,12 +243,31 @@ public class Game extends Canvas implements Runnable {
 		}
 		
 		BufferedImage bimg = Game.image;
+		int brighten = 0;
+//		brightenmap = new int[Game.HEIGHT][Game.WIDTH];
+//		for (int y = 0; y < bimg.getWidth(); y++) {
+//            for (int x = 0; x < bimg.getHeight(); x++) {
+//            	brightenmap[x][y] = fog.getBrightness(x, y);
+//            }
+//        }
+		
 		for (int y = 0; y < Game.image.getWidth(); y++) {
             for (int x = 0; x < Game.image.getHeight(); x++) {
             	Color c = new Color(Game.image.getRGB(y, x));
-            	c = new Color(c.getRed(),
-            			c.getGreen(),
-            			c.getBlue(),
+            	brighten = fog.getBrightness(x, y);
+            	int re = c.getRed();
+            	int gr = c.getGreen();
+            	int bl = c.getBlue();
+            		re += fog.getBrightness(x, y);
+            		gr += fog.getBrightness(x, y);
+            		bl += fog.getBrightness(x, y);
+            	re = (re > 255) ? 255 : re;
+            	gr = (gr > 255) ? 255 : gr;
+            	bl = (bl > 255) ? 255 : bl;
+            	c = new Color(
+            			re,
+            			gr,
+            			bl,
             			fog.getAlpha(x, y));
             	Game.image.setRGB(y, x, c.getRGB());
             }
@@ -255,7 +275,6 @@ public class Game extends Canvas implements Runnable {
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		bs.show();
-		
 	}
 
 	/**
@@ -277,18 +296,22 @@ public class Game extends Canvas implements Runnable {
 				frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 			}
 			if (buttons.get(BN.INSTRUCTIONS).isClicked()){
+				fog.startFlash(100);
+				fcount = 65;
 				hideAll();
 				fj = new FontJump(buttons.get(BN.INSTRUCTIONS).getX(), buttons.get(BN.INSTRUCTIONS).getY(), "Smart Guy!", 100, 45.0, 30, false);
 				playSound("/Blip.wav");
 				stage = Stage.INSTRUCTIONS;
 			}
 			if (buttons.get(BN.CREDITS).isClicked()){
+				fog.startFlash(100);
 				hideAll();
 				fj = new FontJump(buttons.get(BN.CREDITS).getX(), buttons.get(BN.CREDITS).getY(), "Thank You!", 100, 45.0, 30, false);
 				playSound("/Blip.wav");
 				stage = Stage.CREDITS;
 			}
 			if (buttons.get(BN.PLAY).isClicked()){
+				fog.startFlash(100);
 				hideAll();
 				fj = new FontJump(buttons.get(BN.PLAY).getX(), buttons.get(BN.PLAY).getY(), "Let's Go!", 100, 45.0, 30, false);
 				playSound("/Blip.wav");
@@ -298,12 +321,13 @@ public class Game extends Canvas implements Runnable {
 				stage = Stage.LEVEL;
 			}
 			
-			fog.update(mouseHoverX, mouseHoverY, 1000);
+			fog.update(mouseHoverX, mouseHoverY, 300);
 			
 			break;
 		case INSTRUCTIONS:
 			if (mp3player.isIdle()) mp3player.play();
 			if (backspace){
+				fog.startFlash(100);
 				backspace = false;
 				stage = Stage.MENU;
 				buttons.get(BN.INSTRUCTIONS).state = States.ENABLED;
@@ -311,11 +335,12 @@ public class Game extends Canvas implements Runnable {
 				buttons.get(BN.QUIT).state = States.ENABLED;
 				buttons.get(BN.CREDITS).state = States.ENABLED;
 			}
-			fog.update(mouseHoverX, mouseHoverY, 1000);
+			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case CREDITS:
 			if (mp3player.isIdle()) mp3player.play();
 			if (backspace){
+				fog.startFlash(100);
 				backspace = false;
 				stage = Stage.MENU;
 				buttons.get(BN.INSTRUCTIONS).state = States.ENABLED;
@@ -323,7 +348,7 @@ public class Game extends Canvas implements Runnable {
 				buttons.get(BN.QUIT).state = States.ENABLED;
 				buttons.get(BN.CREDITS).state = States.ENABLED;
 			}
-			fog.update(mouseHoverX, mouseHoverY, 1000);
+			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case LEVEL:
 			if (mp3player.isIdle()) mp3player.play();
