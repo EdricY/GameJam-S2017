@@ -145,8 +145,14 @@ public class Game extends Canvas implements Runnable {
 	public boolean left;
 	public boolean right;
 	public boolean boom;
+	public int shotTimer = 0;
+	public int shotTimerMax = 20;
+	public int lastShotX;
+	public int lastShotY;
 	public static int offsetX = 0;
 	public static int offsetY = 0;
+	public int peaceTimer = 100;
+	public static boolean nextWave = false;
 	
 	PlayerObj player;
 	
@@ -240,6 +246,9 @@ public class Game extends Canvas implements Runnable {
 		case CREDITS:
 			screen.render(0, 0, "/credits.png");
 			break;
+		case GAMEOVER:
+			screen.render(0, 0, "/gameover.png");
+			break;
 		case LEVEL:
 			screen.render(0, 0, "/blank.png");
 			GridObj[][] ma = EntityGlobals.getMapArray();
@@ -306,11 +315,27 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
+		
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL){ // draw UI
+			BufferedImage shot = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
+			BufferedImage ref = screen.lookupSprite("/circle.png").image;
+			for (int y = 0; y < shot.getWidth(); y++){
+	            for (int x = 0; x < shot.getHeight(); x++){
+	            	//Color c = new Color(ref.getRGB(x,y));
+	            	int argb = ref.getRGB(x,y);
+	            	float frac = ((float)shotTimer)/((float)shotTimerMax);
+            		argb = (((int)(frac*255) << 24)| 0x00FFFFFF )& (argb);
+	            	//c = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+	            	
+	            	shot.setRGB(x, y, argb);
+	            }
+			}
+			g.drawImage(shot, lastShotX*30 + offsetX, lastShotY*30+offsetY, null);
 			g.setColor(Color.YELLOW);
-			g.drawString("bombs: " +Integer.toString(player.getBombs()), 300, 10);
-			g.drawString("ammo: " +Integer.toString(player.getAmmo()), 200, 10);
+			g.drawString("Bombs: " +Integer.toString(player.getBombs()), 300, 10);
+			g.drawString("Ammo: " +Integer.toString(player.getAmmo()), 200, 10);
+			g.drawString("Health: " +Integer.toString(player.getHealth()), 100, 10);
 		}
 //		switch (stage){
 //		case LEVEL:
@@ -368,11 +393,15 @@ public class Game extends Canvas implements Runnable {
 				mp3player.close();
 				mp3player.changeMusic("/SOUND_main_theme.mp3");
 				mp3player.play();
+				EntityGlobals.resetMap();	
+				int randX = 480 * (int)(Math.random() * 6);
+				int randY = 270 * (int)(Math.random() * 6);
+				offsetX = 8 - randX;
+				offsetY = 8 - randY;
+				player = new PlayerObj(248+randX , 143 + randY);
 				stage = Stage.LEVEL;
 			}
-			
-			fog.update(mouseHoverX, mouseHoverY, 300);
-			
+			fog.update(mouseHoverX, mouseHoverY, 500);
 			break;
 		case INSTRUCTIONS:
 			if (mp3player.isIdle()) mp3player.play();
@@ -400,6 +429,19 @@ public class Game extends Canvas implements Runnable {
 			}
 			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
+		case GAMEOVER:
+			if (mp3player.isIdle()) mp3player.play();
+			if (backspace){
+				fog.startFlash(100);
+				backspace = false;
+				stage = Stage.MENU;
+				buttons.get(BN.INSTRUCTIONS).state = States.ENABLED;
+				buttons.get(BN.PLAY).state = States.ENABLED;
+				buttons.get(BN.QUIT).state = States.ENABLED;
+				buttons.get(BN.CREDITS).state = States.ENABLED;
+			}
+			fog.update(mouseHoverX, mouseHoverY, 300);
+			break;
 		case LEVEL:
 			if (mp3player.isIdle()) mp3player.play();
 			if(boom){
@@ -414,17 +456,38 @@ public class Game extends Canvas implements Runnable {
 				//else fog.startHurtFlash(120);
 			}
 			player.update(up, down, left, right);
-			fcount ++;
+			fcount++;
 			fcount %= 3;
 			if (fcount == 2){
 				for (Enemy e : EntityGlobals.getEnemyList()){
 					if (e.update(player.getX(), player.getY())){
-						player.modifyHealth(-1);
+						player.modifyHealth(-5);
 						fog.startHurtFlash(20);
 					}
 				}
 			}
+			if (peaceTimer > 0){
+				System.out.println("something1");
+				fog.update(player.getX() + offsetX, player.getY() + offsetY, 600);
+				peaceTimer--;
+				if (peaceTimer==0){//wave begins
+					System.out.println("something2");
+				}
+			}
+			if(peaceTimer==0 && nextWave){//wave ends
+				nextWave=false;
+				EntityGlobals.resetMap();
+				peaceTimer = 1000;
+			}
 			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
+			if (shotTimer > 0) shotTimer--;
+			
+			if(player.getHealth() <= 0){
+				stage = Stage.GAMEOVER;
+				mp3player.close();
+				mp3player.changeMusic("/SOUND_menu_theme.mp3");
+				mp3player.play();
+			}
 			break;
 		}
 		if(fj != null && !fj.isDone()) fj.tick();
@@ -463,7 +526,26 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 	}
-
+	public void shoot(int mouseX, int mouseY){
+		if (shotTimer > 0) return;
+		if (player.getAmmo() < 10) return;
+		if ((mouseX- offsetX)/30 < 0 || (mouseX- offsetX)/30 >= 97)
+			return;
+		if ((mouseY- offsetY)/30 < 0 || (mouseY- offsetY)/30 >= 55)
+			return;
+		
+		GridObj go = EntityGlobals.getMapArray()[(mouseX- offsetX)/30][(mouseY- offsetY)/30];
+		if (go.getType().equals("/tile.png")){
+			((Tile) go).setLight(1000);
+			((Tile) go).dealDamage();
+			((Tile) go).setLight(0);
+			player.addAmmo(-10);
+			lastShotX=(mouseX- offsetX)/30;
+			lastShotY=(mouseY- offsetY)/30;
+			shotTimer = shotTimerMax;
+		}
+		return;
+	}
 	private void explode(GridObj go, int power){
 		if (power == 0) return;
 		if (go.getType().equals("/tile.png")){
@@ -597,7 +679,7 @@ public class Game extends Canvas implements Runnable {
 		/**
 		 * The game is at the main menu.
 		 */
-		MENU, LEVEL, INSTRUCTIONS, CREDITS;
+		MENU, LEVEL, INSTRUCTIONS, CREDITS, GAMEOVER;
 	}
 
 	/**

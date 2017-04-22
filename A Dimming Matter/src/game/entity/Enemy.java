@@ -8,6 +8,8 @@ public class Enemy {
 	int x, y, w, h, health, speed;
 	boolean alive, agro;
 	
+	public Enemy(){
+	}
 	public Enemy(int x, int y){
 		this.x = x;
 		this.y = y;
@@ -53,6 +55,11 @@ public class Enemy {
 			down = playerY > this.y;
 			left = playerX < this.x;
 			right = playerX > this.x;
+			int rand = (int)(Math.random()*8);
+			up ^= (rand == 1);
+			down ^= (rand == 2);
+			left ^= (rand == 3);
+			right ^= (rand == 4);
 		}
 		else if (flee>0){
 			int rand = (int)(Math.random()*2);

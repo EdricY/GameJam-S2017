@@ -42,7 +42,7 @@ public class InputHandler implements KeyListener {
 //			}
 //		}
 		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_ESCAPE){
-			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS)
+			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS || game.stage == Stage.GAMEOVER)
 				game.backspace = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W){

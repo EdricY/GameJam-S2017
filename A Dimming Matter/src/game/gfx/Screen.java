@@ -53,6 +53,8 @@ public class Screen {
 		sprites.add(new Sprite("/wall2.png"));
 		sprites.add(new Sprite("/player.png"));
 		sprites.add(new Sprite("/enemy.png"));
+		sprites.add(new Sprite("/circle.png"));
+		sprites.add(new Sprite("/gameover.png"));
 
 		// Sprite sheets. Added here to guarantee their availability at runtime.
 		spritesheets.add(new SpriteSheet("/font.png", 26, 4));
