@@ -246,7 +246,7 @@ public class Game extends Canvas implements Runnable {
 					screen.render(i * 30 + offsetX, j * 30 + offsetY, ma[i][j].getType());
 				}
 			}
-			screen.render(player.getX()+offsetX - 12, player.getY()+offsetY - 12, "/player.png");
+			screen.render(player.getX()+offsetX - 8, player.getY()+offsetY - 8, "/player.png");
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -514,8 +514,11 @@ public class Game extends Canvas implements Runnable {
 		EntityGlobals.resetMap();	
 		
 		fog = new Fog();
-		player = new PlayerObj(252+480*(int)(Math.random() * 6) , 147 + 270 * (int)(Math.random() * 6));
-		
+		int randX = 480 * (int)(Math.random() * 6);
+		int randY = 270 * (int)(Math.random() * 6);
+		offsetX = 8 - randX;
+		offsetY = 8 - randY;
+		player = new PlayerObj(248+randX , 143 + randY);
 		}
 	
 	public int getRoomR(int y){

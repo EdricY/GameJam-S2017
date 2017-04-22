@@ -15,8 +15,8 @@ public class PlayerObj {
 	public PlayerObj(int mapx, int mapy){
 		this.mapx = mapx; //center, not edge
 		this.mapy = mapy;
-		this.w = 24;
-		this.h = 24;
+		this.w = 16;
+		this.h = 16;
 		this.health = 100;
 		this.ammo = 12;
 		this.bomb = 0;
@@ -69,12 +69,32 @@ public class PlayerObj {
 		return this.direction;
 	}
 	public void update(boolean up, boolean down, boolean left, boolean right){
-		int prevX = mapx;
-		int prevY = mapy;
-		if(up) 		mapy-=speed;
-		if(down)	mapy+=speed;
-		if(left)	mapx-=speed;
 		if(right)	mapx+=speed;
+		//R-side collision
+		if(right && (EntityGlobals.mapArray[(mapx+8)/30][(mapy+8)/30].getType().equals("/wall.png") ||
+				EntityGlobals.mapArray[(mapx+8)/30][(mapy-8)/30].getType().equals("/wall.png"))){
+			mapx = ((mapx+8)/30) * 30 - 9;
+		}
+		if(left)	mapx-=speed;
+		//L-side collision
+		if(left && (EntityGlobals.mapArray[(mapx-8)/30][(mapy+8)/30].getType().equals("/wall.png") ||
+				EntityGlobals.mapArray[(mapx-8)/30][(mapy-8)/30].getType().equals("/wall.png"))){
+			mapx = ((mapx-8)/30) * 30 + 38;
+		}
+		if(up) 		mapy-=speed;
+		//T-side collision
+		if(up && (EntityGlobals.mapArray[(mapx-8)/30][(mapy-8)/30].getType().equals("/wall.png") ||
+				EntityGlobals.mapArray[(mapx+8)/30][(mapy-8)/30].getType().equals("/wall.png"))){
+			mapy = ((mapy-8)/30) * 30 + 38;
+		}
+		
+		if(down)	mapy+=speed;
+		//B-side collision
+		if(down && (EntityGlobals.mapArray[(mapx-8)/30][(mapy+8)/30].getType().equals("/wall.png") ||
+				EntityGlobals.mapArray[(mapx+8)/30][(mapy+8)/30].getType().equals("/wall.png"))){
+			mapy = ((mapy+8)/30) * 30 - 9;
+		}
+		
 		if(mapx + Game.offsetX > Game.WIDTH - Game.WIDTH/4)
 			Game.offsetX -=speed;
 		if(mapy + Game.offsetY > Game.HEIGHT - Game.HEIGHT/4)
@@ -83,10 +103,6 @@ public class PlayerObj {
 			Game.offsetX +=speed;
 		if(mapy + Game.offsetY < Game.HEIGHT/4)
 			Game.offsetY +=speed;
-		//R-side collision
-		if(EntityGlobals.mapArray[(mapx+12)/30][(mapy+12)/30].getType().equals("/wall.png")){
-			
-		}
 	}
 	public void draw(Graphics g){ 
 //		g.setColor(Color.WHITE);
