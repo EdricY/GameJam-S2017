@@ -7,7 +7,7 @@ import game.gfx.Screen;
 
 public class PlayerObj {
 	
-	int x, y, w, h, health, ammo, bomb;
+	int x, y, w, h, health, ammo, bomb, range;
 	
 	public PlayerObj(int x, int y){
 		this.x = x;
@@ -17,6 +17,7 @@ public class PlayerObj {
 		this.health = 100;
 		this.ammo = 12;
 		this.bomb = 0;
+		this.range = 10;
 	}
 	
 	public int getHealth(){
@@ -35,6 +36,10 @@ public class PlayerObj {
 		this.bomb += 1;
 	}
 	
+//	public void basicAttack(int mouseX, int mouseY){
+//		
+//	}
+	
 	public int getX(){
 		return this.x;
 	}
@@ -47,5 +52,4 @@ public class PlayerObj {
 		g.setColor(Color.WHITE);
 		g.fillRect(x, y, w, h);
 	}
-
 }

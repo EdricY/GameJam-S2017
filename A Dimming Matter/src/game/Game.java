@@ -20,6 +20,7 @@ import javax.swing.JFrame;
 
 import game.entity.EntityGlobals;
 import game.entity.Fog;
+import game.entity.GridObj;
 import game.entity.EntityGlobals;
 import game.gfx.Button;
 import game.gfx.Button.States;
@@ -226,7 +227,8 @@ public class Game extends Canvas implements Runnable {
 			screen.render(0, 0, "/credits.png");
 			break;
 		case LEVEL:
-			break;
+			screen.render(0, 0, "/blank.png");
+
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -274,6 +276,18 @@ public class Game extends Canvas implements Runnable {
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
+		switch (stage){
+		case LEVEL:
+			GridObj[][] ma = EntityGlobals.getMapArray();
+			for (int i = 0; i < ma.length; i++)
+			{
+				for (int j = 0; j < ma[0].length; j++)
+				{
+					ma[i][j].draw(g);
+				}
+			}
+			break;
+		}
 		bs.show();
 	}
 
@@ -466,8 +480,10 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
-		EntityGlobals.resetMap();				 
+		EntityGlobals.resetMap();	
+		
 		fog = new Fog();
+		
 		}
 	
 	public int distsq(int x1, int y1, int x2, int y2){
