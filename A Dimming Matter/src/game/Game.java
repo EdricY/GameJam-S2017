@@ -18,7 +18,10 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
-import game.entity.Fog;import game.entity.entityGlobals;import game.gfx.Button;
+import game.entity.EntityGlobals;
+import game.entity.Fog;
+import game.entity.EntityGlobals;
+import game.gfx.Button;
 import game.gfx.Button.States;
 import game.gfx.ChatBox;
 import game.gfx.FontJump;
@@ -438,7 +441,9 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
-		entityGlobals.resetEntityGlobals();				 fog = new Fog();	}
+		EntityGlobals.resetEntityGlobals();				 
+		fog = new Fog();
+		}
 	
 	public int distsq(int x1, int y1, int x2, int y2){
 		return ( (x1-x2)*(x1-x2) ) + ( (y1-y2)*(y1-y2) );

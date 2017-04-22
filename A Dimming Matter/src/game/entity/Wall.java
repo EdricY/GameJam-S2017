@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 import game.gfx.Screen;
 
-public class Wall {
+public class Wall implements GridObj{
 	
 	int x, y, w, h;
 	public Wall(int x, int y){
@@ -23,6 +23,10 @@ public class Wall {
 	{ 
 		g.setColor(Color.GREEN);
 		g.fillRect(x, y, w, h);
+	}
+
+	public String getType() {
+		return "Wall";
 	}
 
 }

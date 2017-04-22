@@ -4,7 +4,7 @@ package game.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
-public class AmmoPack {
+public class AmmoPack implements GridObj{
 	
 	int x, y, w, h, ammoContained;
 	
@@ -24,6 +24,10 @@ public class AmmoPack {
 	{ 
 		g.setColor(Color.BLACK);
 		g.fillRect(x, y, w, h);
+	}
+
+	public String getType() {
+		return "AmmoPack";
 	}
 
 }

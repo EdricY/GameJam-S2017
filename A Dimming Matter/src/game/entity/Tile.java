@@ -6,7 +6,7 @@ import java.awt.Graphics;
 import game.gfx.Screen;
 import java.util.*;
 
-public class Tile {
+public class Tile implements GridObj {
 	
 	int x, y, w, h, light;
 	public Tile(int x, int y){
@@ -35,8 +35,8 @@ public class Tile {
 	
 	public ArrayList<Enemy> enemiesIn(){
 		ArrayList<Enemy> listofObjects = new ArrayList();
-		ArrayList<Enemy> listofEnemies = entityGlobals.getEnemyList();
-		for(int i = 0; i < entityGlobals.lenEnemyList(); i++){
+		ArrayList<Enemy> listofEnemies = EntityGlobals.getEnemyList();
+		for(int i = 0; i < EntityGlobals.lenEnemyList(); i++){
 			if (contains(listofEnemies.get(i).getX(), listofEnemies.get(i).getY())){
 				listofObjects.add(listofEnemies.get(i));
 			}
@@ -49,6 +49,10 @@ public class Tile {
 	{ 
 		g.setColor(Color.BLACK);
 		g.fillRect(x, y, w, h);
+	}
+
+	public String getType() {
+		return "Tile";
 	}
 
 }

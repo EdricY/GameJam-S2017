@@ -2,9 +2,10 @@ package game.entity;
 
 import java.util.*;
 
-public class entityGlobals {
+public class EntityGlobals {
 	static ArrayList<Enemy> enemyList;
 	static ArrayList<Wall> wallList;
+	static GridObj[][] mapArray;
 	
 	public static void resetEntityGlobals(){
 		enemyList = new ArrayList();
