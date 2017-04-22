@@ -13,8 +13,8 @@ public class Enemy {
 	public Enemy(int x, int y){
 		this.x = x;
 		this.y = y;
-		this.w = 24;
-		this.h = 24;
+		this.w = 8;
+		this.h = 8;
 		this.health = 100;
 		this.alive = true;
 	}
