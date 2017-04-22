@@ -8,6 +8,8 @@ import java.util.*;
 public class Tile implements GridObj {
 	
 	int x, y, w, h, row, col, light, ammo;
+	boolean healthOrb;
+	
 	public Tile(int row, int col){
 		this.x = row * 30;
 		this.y = col * 30;
@@ -16,6 +18,8 @@ public class Tile implements GridObj {
 		this.row = row;
 		this.col = col;
 		this.light = 0;
+		this.ammo = 0;
+		this.healthOrb = true;
 	}
 	
 	public void setLight(int Light){
@@ -58,6 +62,14 @@ public class Tile implements GridObj {
 	
 	public int getAmmo(){
 		return this.ammo;
+	}
+	
+	public void addHealthOrb(){
+		this.healthOrb = true;
+	}
+	
+	public boolean isHealthOrb(){
+		return this.healthOrb;
 	}
 	
 	public void draw(Graphics g)
