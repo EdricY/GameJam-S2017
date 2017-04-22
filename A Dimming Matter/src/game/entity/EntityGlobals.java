@@ -15,14 +15,16 @@ public class EntityGlobals {
 		roundNumber += 1;
 		enemyList = new ArrayList();
 		wallList = new ArrayList();
-		mapArray = new GridObj[rowCount][colCount];
+		mapArray = new GridObj[colCount][rowCount];
 		populateMap( roundNumber );
 	}
 	
 	private static void populateMap( int currentRound ){
-		for (int i = 0; i < rowCount; i++){
-			for (int j = 0; j < colCount; j++){
-				if ((i % 9 == 0) || (j % 16 == 0) && (i % 9 != j % 16) && (i != 0) && (j != 0) && (i != rowCount) && (j != colCount)){
+		for (int i = 0; i < colCount; i++){
+			for (int j = 0; j < rowCount; j++){
+				if (((i % 16 == 0) && (j % 9 == 0)) || (i == 0) || (j == 0) || ((i == colCount) || (j == rowCount)) ){
+					mapArray[i][j] = new Wall(i, j);
+				} else if ((i % 16 == 0) || (j % 9 == 0)){
 					if ((int)(Math.random() * 15) < 14){
 						mapArray[i][j] = new Wall(i, j);
 					} else {
