@@ -40,23 +40,23 @@ public class InputHandler implements KeyListener {
 //				}
 //			}
 //		}
-		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE){
+		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_ESCAPE){
 			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS)
 				game.backspace = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_UP){
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W){
 			if (game.stage == Stage.LEVEL)
 				game.up = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S){
 			if (game.stage == Stage.LEVEL)
 				game.down = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+		if (e.getKeyCode() == KeyEvent.VK_LEFT  || e.getKeyCode() == KeyEvent.VK_A){
 			if (game.stage == Stage.LEVEL)
 				game.left = true;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D){
 			if (game.stage == Stage.LEVEL)
 				game.right = true;
 		}
@@ -94,19 +94,19 @@ public class InputHandler implements KeyListener {
 				}
 			}
 		}
-		if (e.getKeyCode() == KeyEvent.VK_UP){
+		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W){
 			if (game.stage == Stage.LEVEL)
 				game.up = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_DOWN){
+		if (e.getKeyCode() == KeyEvent.VK_DOWN || e.getKeyCode() == KeyEvent.VK_S){
 			if (game.stage == Stage.LEVEL)
 				game.down = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_LEFT){
+		if (e.getKeyCode() == KeyEvent.VK_LEFT  || e.getKeyCode() == KeyEvent.VK_A){
 			if (game.stage == Stage.LEVEL)
 				game.left = false;
 		}
-		if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+		if (e.getKeyCode() == KeyEvent.VK_RIGHT || e.getKeyCode() == KeyEvent.VK_D){
 			if (game.stage == Stage.LEVEL)
 				game.right = false;
 		}

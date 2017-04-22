@@ -16,6 +16,7 @@ public class Wall implements GridObj{
 		this.h = 30;
 		this.row = row;
 		this.col = col;
+		EntityGlobals.addWall(this);
 	}
 	
 	public void destroyWall(){
