@@ -70,6 +70,7 @@ public class Boss extends Enemy{
 			for (int i = 0; i < 3; i++){
 				int rowToCheck = (this.x / 30) + 1;
 				int colToCheck = (this.y / 30) + (-1 + i);
+				if(rowToCheck >= 0 && colToCheck >=0)
 				if (EntityGlobals.getMapArray()[rowToCheck][colToCheck].getType() == "/Tile.png" ){
 					EntityGlobals.getMapArray()[rowToCheck][colToCheck] = new HellPortal(rowToCheck, colToCheck);				}
 			}

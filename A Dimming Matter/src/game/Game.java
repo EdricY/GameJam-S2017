@@ -145,8 +145,9 @@ public class Game extends Canvas implements Runnable {
 	public boolean left;
 	public boolean right;
 	public boolean boom;
+	public boolean crit;
 	public int shotTimer = 0;
-	public int shotTimerMax = 20;
+	public int shotTimerMax = 40;
 	public int lastShotX;
 	public int lastShotY;
 	public static int offsetX = 0;
@@ -364,18 +365,23 @@ public class Game extends Canvas implements Runnable {
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL || stage == Stage.PAUSE){ // draw UI
 			BufferedImage shot = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
-			System.out.println("b");
-			BufferedImage ref = screen.lookupSprite("/circle.png").image;
-			for (int y = 0; y < shot.getWidth(); y++){
-	            for (int x = 0; x < shot.getHeight(); x++){
-	            	//Color c = new Color(ref.getRGB(x,y));
-	            	int argb = ref.getRGB(x,y);
-	            	float frac = ((float)shotTimer)/((float)shotTimerMax);
-            		argb = (((int)(frac*255) << 24)| 0x00FFFFFF )& (argb);
-	            	//c = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
-	            	
-	            	shot.setRGB(x, y, argb);
-	            }
+			BufferedImage ref = null;
+			if (stage == Stage.LEVEL){
+					if (!crit)
+						ref = screen.lookupSprite("/circle.png").image;
+					else if (crit)
+						ref = screen.lookupSprite("/critcircle.png").image;
+					for (int y = 0; y < shot.getWidth(); y++){
+			            for (int x = 0; x < shot.getHeight(); x++){
+			            	//Color c = new Color(ref.getRGB(x,y));
+			            	int argb = ref.getRGB(x,y);
+			            	float frac = ((float)shotTimer)/((float)shotTimerMax);
+		            		argb = (((int)(frac*255) << 24)| 0x00FFFFFF )& (argb);
+			            	//c = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
+			            	
+			            	shot.setRGB(x, y, argb);
+		            }
+				}
 			}
 			g.drawImage(shot, lastShotX*30 + offsetX, lastShotY*30+offsetY, null);
 			g.setColor(Color.YELLOW);
@@ -392,6 +398,7 @@ public class Game extends Canvas implements Runnable {
 			for (Enemy e : EntityGlobals.getEnemyList()){
 				enemyChangeBuffer.add(e);
 			}
+			if (stage == Stage.LEVEL){
 			for (Enemy e : enemyChangeBuffer){
 				if (e.getHealth() == e.getMaxHealth()) continue;
 				int ypos = e.getY()-e.getH()-3+offsetY;
@@ -403,6 +410,7 @@ public class Game extends Canvas implements Runnable {
 				g.drawLine(xpos, ypos, xpos + 2*(int)(hfrac * e.getW()), ypos);
 			}
 			EntityGlobals.setEnemyList(enemyChangeBuffer);
+			}
 		}
 		bs.show();
 	}
@@ -536,6 +544,21 @@ public class Game extends Canvas implements Runnable {
 					fog.startFlash(60);
 				} else fog.startHurtFlash(60);
 			}
+			if (backspace){
+				fog.startFlash(100);
+				backspace = false;
+				stage = Stage.MENU;
+				buttons.get(BN.INSTRUCTIONS).state = States.ENABLED;
+				buttons.get(BN.PLAY).state = States.ENABLED;
+				buttons.get(BN.QUIT).state = States.ENABLED;
+				buttons.get(BN.CREDITS).state = States.ENABLED;
+				buttons.get(BN.UPSPEED).state = Button.States.HIDDEN;
+				buttons.get(BN.UPHP).state = Button.States.HIDDEN;
+				buttons.get(BN.UPPOW).state = Button.States.HIDDEN;
+				buttons.get(BN.UPAMMOCONS).state = Button.States.HIDDEN;
+				buttons.get(BN.UPCRIT).state = Button.States.HIDDEN;
+				buttons.get(BN.UPFIRERATE).state = Button.States.HIDDEN;
+			}
 			fog.update(mouseHoverX, mouseHoverY, 500);
 			break;
 		case LEVEL:
@@ -573,6 +596,7 @@ public class Game extends Canvas implements Runnable {
 				fog.update(player.getX() + offsetX, player.getY() + offsetY, 600);
 				peaceTimer--;
 				if (peaceTimer==0){//wave begins
+					EntityGlobals.spawnEnemies( EntityGlobals.getRoundNum());
 				}
 			}
 			else fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
@@ -584,6 +608,7 @@ public class Game extends Canvas implements Runnable {
 			}
 			
 			if (shotTimer > 0) shotTimer--;
+			if (shotTimer == 0) crit = false;
 			
 			if(player.getHealth() <= 0){
 				stage = Stage.GAMEOVER;
@@ -653,11 +678,16 @@ public class Game extends Canvas implements Runnable {
 	
 	public void shoot(int mouseX, int mouseY, int power){
 		if (shotTimer > 0) return;
-		if (player.getAmmo() < 10) return;
+		if (player.getAmmo() < 10-this.upammoconserve) return;
 		if ((mouseX- offsetX)/30 < 0 || (mouseX- offsetX)/30 >= 97)
 			return;
 		if ((mouseY- offsetY)/30 < 0 || (mouseY- offsetY)/30 >= 55)
 			return;
+		if ((int)(Math.random()*100) < this.upcrit * 10){
+			crit = true;
+			power = power * 2;
+		}
+		shotTimerMax = 40 - (6*this.upfirerate);
 		
 		GridObj go = EntityGlobals.getMapArray()[(mouseX- offsetX)/30][(mouseY- offsetY)/30];
 		if (go.getType().equals("/tile.png")){
@@ -672,12 +702,12 @@ public class Game extends Canvas implements Runnable {
 			else if (((Tile) go).contains(boss.getX()+boss.getW()/2-1, boss.getY()+boss.getH()/2))
 				boss.dealDamage(power);
 			else{
-				((Tile) go).setLight(100);
+				((Tile) go).setLight(power);
 				((Tile) go).dealDamage();
 				((Tile) go).setLight(0);
 			}
 				
-			player.addAmmo(-10);
+			player.addAmmo(-10 + this.upammoconserve);
 			lastShotX=(mouseX- offsetX)/30;
 			lastShotY=(mouseY- offsetY)/30;
 			shotTimer = shotTimerMax;

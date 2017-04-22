@@ -59,6 +59,7 @@ public class Screen {
 		sprites.add(new Sprite("/healthOrb.png"));
 		sprites.add(new Sprite("/hellportal.png"));
 		sprites.add(new Sprite("/pause.png"));
+		sprites.add(new Sprite("/critcircle.png"));
 		
 		// Sprite sheets. Added here to guarantee their availability at runtime.
 		spritesheets.add(new SpriteSheet("/font.png", 26, 4));

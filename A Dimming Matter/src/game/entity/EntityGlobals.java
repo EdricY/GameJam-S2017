@@ -40,9 +40,7 @@ public class EntityGlobals {
 				} else if (currentRound < 12) { 
 					Tile t = new Tile(i, j);
 					mapArray[i][j] = t;
-					if((int)(Math.random() * (150 - (currentRound * 15))) == 0){
-						enemyList.add(new Enemy(i*30, j*30));
-					}
+
 				} else {
 					mapArray[i][j] = new Tile(i, j);
 				}
@@ -50,6 +48,14 @@ public class EntityGlobals {
 		}
 	}
 
+	public static void spawnEnemies( int currentRound ){
+		for (int i = 0; i < colCount; i++)
+		for (int j = 0; j < rowCount; j++)
+			if((int)(Math.random() * (150 - (currentRound * 15))) == 0){
+				enemyList.add(new Enemy(i*30, j*30));
+			}
+	}
+	
 	public static void addEnemy( Enemy enemy ){
 		enemyList.add(enemy);
 	}
