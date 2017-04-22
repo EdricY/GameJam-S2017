@@ -17,6 +17,7 @@ public class Enemy {
 		this.h = 8;
 		this.health = 100;
 		this.alive = true;
+		EntityGlobals.addEnemy(this);
 	}
 	
 	public int getHealth(){
