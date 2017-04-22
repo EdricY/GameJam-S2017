@@ -1,15 +1,6 @@
 package game.entity;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
 import game.Game;
-import game.gfx.Sprite;
 
 public class Fog {
 	int[][] fogAlpha;
