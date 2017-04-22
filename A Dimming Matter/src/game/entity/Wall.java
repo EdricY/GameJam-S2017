@@ -7,6 +7,7 @@ public class Wall implements GridObj{
 	
 	int x, y, w, h, row, col;
 	boolean indestructable;
+	String path;
 	
 	public Wall(int row, int col, boolean indestructable){
 		this.x = row * 30;
@@ -16,6 +17,14 @@ public class Wall implements GridObj{
 		this.row = row;
 		this.col = col;
 		this.indestructable = indestructable;
+		int randomInd = (int)(Math.random() * 3);
+		if (randomInd == 0){
+			path =  "/wall0.png";
+		} else if (randomInd == 1) {
+			path = "/wall1.png";
+		} else {
+			path = "/wall2.png";
+		}
 		EntityGlobals.addWall(this);
 	}
 	
@@ -36,14 +45,7 @@ public class Wall implements GridObj{
 	}
 	
 	public String getPath(){
-		int randomInd = ((int)Math.random() * 3);
-		if (randomInd == 0){
-			return "/wall0.png";
-		} else if (randomInd == 1) {
-			return "/wall1.png";
-		} else {
-			return "/wall2.png";
-		}
+		return path;
 	}
 
 	@Override
