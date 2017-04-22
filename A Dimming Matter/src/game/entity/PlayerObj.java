@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import game.Game;
 
 public class PlayerObj {
-	int mapx, mapy, w, h, health, ammo, bomb, range, speed, money;
+	int mapx, mapy, w, h, health, maxhealth, ammo, bomb, range, speed, money;
 	Direction direction;
 	
 	public PlayerObj(int mapx, int mapy){
@@ -13,17 +13,21 @@ public class PlayerObj {
 		this.mapy = mapy;
 		this.w = 16;
 		this.h = 16;
-		this.health = 100;
+		this.maxhealth = 100 + 10 * Game.upmaxhealth;
+		this.health = maxhealth;
 		this.ammo = 12;
 		this.bomb = 30;
 		this.range = 10;
 		this.direction = Direction.UP;
-		this.speed = 10;
-		this.money = 0;
+		this.speed = 1 + Game.upspeed;
+		this.money = 15;
 	}
 	
 	public int getHealth(){
 		return this.health;
+	}
+	public int getMaxHealth(){
+		return this.maxhealth;
 	}
 	
 	public int getAmmo(){
@@ -46,7 +50,10 @@ public class PlayerObj {
 		this.health += num;
 		if (this.health < 0) this.health = 0;
 	}
-	
+	public void modifyMaxHealth(int num){
+		this.maxhealth += num;
+		this.health += num;
+	}
 	public void addMoney( int moneyToAdd ){
 		this.money += moneyToAdd;
 	}
@@ -83,6 +90,8 @@ public class PlayerObj {
 		return this.direction;
 	}
 	public void update(boolean up, boolean down, boolean left, boolean right){
+		this.speed = 1 + Game.upspeed;
+		this.maxhealth = 100 + 10 * Game.upmaxhealth;
 		if(right)	mapx+=speed;
 		//R-side collision
 		if(right && (EntityGlobals.mapArray[(mapx+8)/30][(mapy+8)/30].getType().equals("/wall.png") ||

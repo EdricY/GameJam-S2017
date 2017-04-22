@@ -155,12 +155,12 @@ public class Game extends Canvas implements Runnable {
 	public int peaceTimer = 1200;
 	public static boolean nextWave = false;
 	
-	int upspeed=		0;
-	int upmaxhealth=	2;
-	int uppower=		3;
-	int upammoconserve=	4;
-	int upcrit=			5;
-	int upfirerate=		1;
+	public static int upspeed=			0;
+	public static int upmaxhealth=		0;
+	public static int uppower=			0;
+	public static int upammoconserve=	0;
+	public static int upcrit=			0;
+	public static int upfirerate=		0;
 	
 	PlayerObj player;
 	Boss boss;
@@ -295,11 +295,13 @@ public class Game extends Canvas implements Runnable {
 		int redden = 0;
 		int flasht = fog.getFlashTimer();
 		int hurtt = fog.getHurtTimer();
-		
+		int width = getWidth();
+		int height= getHeight();
 		/*fog loop
 		/*/
-		for (int y = 0; y < getWidth(); y++) {
-            for (int x = 0; x < getHeight(); x++) {
+		
+		for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
             	alpha = fog.getAlpha(x, y);
             	if (alpha == 0){
             		Game.image.setRGB(y, x, 0 & 0);
@@ -351,10 +353,17 @@ public class Game extends Canvas implements Runnable {
 			g.drawLine(250, 365, 250+60*upcrit, 365);
 		if (upfirerate > 0)
 			g.drawLine(250, 425, 250+60*upfirerate, 425);
-		}
 		
+		g.setFont(new java.awt.Font("Sylfaen", java.awt.Font.PLAIN, 30));
+		g.drawString("Speed" , 155, 132);
+		g.drawString("Max Health" , 80, 192);
+		g.drawString("Shot Damage" , 60, 252);
+		g.drawString("Ammo Usage" , 60, 312);
+		g.drawString("Critical Chance" , 35, 372);
+		g.drawString("Fire Rate" , 120, 432);
+		}
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
-		if (stage == Stage.LEVEL){ // draw UI
+		if (stage == Stage.LEVEL || stage == Stage.PAUSE){ // draw UI
 			BufferedImage shot = new BufferedImage(30, 30, BufferedImage.TYPE_INT_ARGB);
 			BufferedImage ref = screen.lookupSprite("/circle.png").image;
 			for (int y = 0; y < shot.getWidth(); y++){
@@ -370,9 +379,12 @@ public class Game extends Canvas implements Runnable {
 			}
 			g.drawImage(shot, lastShotX*30 + offsetX, lastShotY*30+offsetY, null);
 			g.setColor(Color.YELLOW);
+			g.setFont(new java.awt.Font("Sylfaen", java.awt.Font.PLAIN, 12));
 			g.drawString("Bombs: " +Integer.toString(player.getBombs()), 300, 10);
 			g.drawString("Ammo: " +Integer.toString(player.getAmmo()), 200, 10);
-			g.drawString("Health: " +Integer.toString(player.getHealth()), 100, 10);
+			g.drawString("Money: " +Integer.toString(player.getMoney()), 100, 10);
+			g.drawString("Health: " +Integer.toString(player.getHealth())+"/"+Integer.toString(player.getMaxHealth()), 0, 10);
+			
 			
 			g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
@@ -481,21 +493,48 @@ public class Game extends Canvas implements Runnable {
 			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case PAUSE:
-			//UPSPEED, UPHP, UPPOW, UPAMMOCONS, UPCRIT, UPFIRERATE;
 			if (buttons.get(BN.UPSPEED).isClicked()){
-				if (player.getMoney() > 1){
-					
-				}
+				if (player.getMoney() > 1 && upspeed < 5){
+					player.spendMoney(1);
+					this.upspeed++;
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
-			if (buttons.get(BN.UPHP).isClicked()){
+			if (buttons.get(BN.UPHP).isClicked() ){
+				if (player.getMoney() > 1 && upmaxhealth < 5){
+					player.spendMoney(1);
+					this.upmaxhealth++;
+					player.modifyMaxHealth(10);
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
 			if (buttons.get(BN.UPPOW).isClicked()){
+				if (player.getMoney() >= 1 && uppower < 5){
+					player.spendMoney(1);
+					this.uppower++;
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
 			if (buttons.get(BN.UPAMMOCONS).isClicked()){
+				if (player.getMoney() >= 1 && upammoconserve < 5){
+					player.spendMoney(1);
+					this.upammoconserve++;
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
 			if (buttons.get(BN.UPCRIT).isClicked()){
+				if (player.getMoney() >= 1 && upcrit < 5){
+					player.spendMoney(1);
+					this.upcrit++;
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
 			if (buttons.get(BN.UPFIRERATE).isClicked()){
+				if (player.getMoney() >= 1 && upfirerate < 5){
+					player.spendMoney(1);
+					this.upfirerate++;
+					fog.startFlash(60);
+				} else fog.startHurtFlash(60);
 			}
 			fog.update(mouseHoverX, mouseHoverY, 500);
 			break;
@@ -508,6 +547,7 @@ public class Game extends Canvas implements Runnable {
 					player.modifyBomb(-1);
 					player.modifyHealth((int)(-1 * (.06 * player.getHealth())));
 					int range = player.getHealth()/10;
+					if (range > 10) range = 10;
 					explode(EntityGlobals.getMapArray()[player.getX()/30][player.getY()/30], range);
 				}
 				//else fog.startHurtFlash(120);
@@ -600,8 +640,15 @@ public class Game extends Canvas implements Runnable {
 			buttons.get(BN.UPFIRERATE).state = Button.States.ENABLED;
 			this.stage = Stage.PAUSE;
 		}
-		else if (this.stage == Stage.PAUSE)
+		else if (this.stage == Stage.PAUSE){
+			buttons.get(BN.UPSPEED).state = Button.States.HIDDEN;
+			buttons.get(BN.UPHP).state = Button.States.HIDDEN;
+			buttons.get(BN.UPPOW).state = Button.States.HIDDEN;
+			buttons.get(BN.UPAMMOCONS).state = Button.States.HIDDEN;
+			buttons.get(BN.UPCRIT).state = Button.States.HIDDEN;
+			buttons.get(BN.UPFIRERATE).state = Button.States.HIDDEN;
 			this.stage = Stage.LEVEL;
+		}
 	}
 	
 	public void shoot(int mouseX, int mouseY, int power){
