@@ -19,7 +19,7 @@ public class PlayerObj {
 		this.h = 16;
 		this.health = 100;
 		this.ammo = 12;
-		this.bomb = 0;
+		this.bomb = 3;
 		this.range = 10;
 		this.direction = Direction.UP;
 		this.speed = 10;
@@ -41,8 +41,13 @@ public class PlayerObj {
 		this.ammo += ammoAdded;
 	}
 	
-	public void addBomb(){
-		this.bomb += 1;
+	public void modifyBomb(int num){
+		this.bomb += num;
+		if (this.bomb < 0) this.bomb = 0;
+	}
+	public void modifyHealth(int num){
+		this.health += num;
+		if (this.health < 0) this.health = 0;
 	}
 	
 //	public void basicAttack(int mouseX, int mouseY){

@@ -141,8 +141,7 @@ public class Game extends Canvas implements Runnable {
 	public boolean down;
 	public boolean left;
 	public boolean right;
-	public boolean space;
-	public boolean spacePrev;
+	public boolean boom;
 	public static int offsetX = 0;
 	public static int offsetY = 0;
 	
@@ -262,42 +261,49 @@ public class Game extends Canvas implements Runnable {
 			pixels[pix] = screen.pixels[pix];
 		}
 		
-		BufferedImage bimg = Game.image;
+		BufferedImage bimg = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		for (int y = 0; y < getWidth(); y++)
+            for (int x = 0; x < getHeight(); x++)
+            	bimg.setRGB(y, x, Game.image.getRGB(y, x));
 		int brighten = 0;
 		int alpha = 0;
+		int redden = 0;
 		
-		for (int y = 0; y < Game.image.getWidth(); y++) {
-            for (int x = 0; x < Game.image.getHeight(); x++) {
+		for (int y = 0; y < getWidth(); y++) {
+            for (int x = 0; x < getHeight(); x++) {
             	
             	alpha = fog.getAlpha(x, y);
             	brighten = fog.getBrightness(x, y);
+            	redden = fog.getRedder(x, y);
             	if (alpha == 0){
-            		Game.image.setRGB(y, x, 0 & 0);
-            	}
-            	else if (fog.getFlashTimer() == 0){
+            		bimg.setRGB(y, x, 0 & 0);
+            	} else if (fog.getFlashTimer()==0 && fog.getHurtTimer()==0){
             		Color c = new Color(Game.image.getRGB(y, x));
             		int argb = c.getRGB();
             		argb = (alpha << 24) | (argb & 0x00FFFFFF);
-            		Game.image.setRGB(y, x, argb);
+            		bimg.setRGB(y, x, argb);
             	} else {
 	            	Color c = new Color(Game.image.getRGB(y, x));
 	            	int re = c.getRed() + brighten;
-	            	int gr = c.getGreen() + brighten;
-	            	int bl = c.getBlue() + brighten;
+	            	int gr = c.getGreen() + brighten - redden;
+	            	int bl = c.getBlue() + brighten - redden;
 	            	re = (re > 255) ? 255 : re;
+	            	re = (re < 0) ? 0 : re;
 	            	gr = (gr > 255) ? 255 : gr;
+	            	gr = (gr < 0) ? 0 : gr;
 	            	bl = (bl > 255) ? 255 : bl;
+	            	bl = (bl < 0) ? 0 : bl;
 	            	c = new Color(
 	            			re,
 	            			gr,
 	            			bl,
 	            			alpha);
-	            	Game.image.setRGB(y, x, c.getRGB());
-            	}
-            }
+	            	bimg.setRGB(y, x, c.getRGB());
+	            }
+			}
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
-		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL){ // draw UI
 			g.setColor(Color.YELLOW);
 			g.drawString("bombs: " +Integer.toString(player.getBombs()), 300, 10);
@@ -391,11 +397,17 @@ public class Game extends Canvas implements Runnable {
 			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case LEVEL:
-			
 			if (mp3player.isIdle()) mp3player.play();
+			if(boom){
+				boom = false;
+				if(player.getBombs() > 0){//detonate bomb
+					fog.startFlash(200);
+					player.modifyBomb(-1);
+					player.modifyHealth(-5);
+				}
+				else fog.startHurtFlash(200);
+			}
 			player.update(up, down, left, right);
-			
-			spacePrev = space;
 			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			break;
 		}

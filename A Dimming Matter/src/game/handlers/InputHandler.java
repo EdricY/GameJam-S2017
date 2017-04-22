@@ -20,6 +20,7 @@ import java.awt.event.KeyListener;
 public class InputHandler implements KeyListener {
 
 	private final Game game;
+	public boolean space;
 
 	public InputHandler(Game game) {
 		game.addKeyListener(this);
@@ -61,8 +62,10 @@ public class InputHandler implements KeyListener {
 				game.right = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE){
-			if (game.stage == Stage.LEVEL)
-				game.space = true;
+			if (game.stage == Stage.LEVEL && space == false){
+				space = true;
+				game.boom = true;
+			}
 		}
 	}
 
@@ -112,7 +115,7 @@ public class InputHandler implements KeyListener {
 		}
 		if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			if (game.stage == Stage.LEVEL)
-				game.space = false;
+				space = false;
 		}
 	}
 
