@@ -411,10 +411,15 @@ public class Game extends Canvas implements Runnable {
 					int range = player.getHealth()/10;
 					explode(EntityGlobals.getMapArray()[player.getX()/30][player.getY()/30], range);
 				}
-				else fog.startHurtFlash(120);
+				//else fog.startHurtFlash(120);
 			}
 			player.update(up, down, left, right);
-			for (Enemy e : EntityGlobals.getEnemyList()) e.update(player.getX(), player.getY());
+			for (Enemy e : EntityGlobals.getEnemyList()){ 
+				if (e.update(player.getX(), player.getY())){
+					player.modifyHealth(-1);
+					fog.startHurtFlash(20);
+				}
+			}
 			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			break;
 		}

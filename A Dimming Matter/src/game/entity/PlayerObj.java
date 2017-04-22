@@ -8,8 +8,7 @@ import game.gfx.Screen;
 import java.util.*;
 
 public class PlayerObj {
-	public int health;
-	int mapx, mapy, w, h, ammo, bomb, range, speed;
+	int mapx, mapy, w, h, health, ammo, bomb, range, speed;
 	Direction direction;
 	
 	public PlayerObj(int mapx, int mapy){
@@ -22,7 +21,7 @@ public class PlayerObj {
 		this.bomb = 3;
 		this.range = 10;
 		this.direction = Direction.UP;
-		this.speed = 10;
+		this.speed = 1;
 	}
 	
 	public int getHealth(){

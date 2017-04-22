@@ -41,7 +41,7 @@ public class Fog {
 	            	}
 	            	if (hurttimer != 0){
 	            		float frac2 = ((float)hurttimer)/((float)hurtmax);
-	            		int delta2 = (int)(192*frac2*frac2);
+	            		int delta2 = (int)(160*frac2*frac2);
 	            		fogRedden[y][x] = delta2;
 	            	}
             	}

@@ -7,8 +7,8 @@ import game.Game;
 import game.gfx.Screen;
 
 public class Enemy {
-	
-	int x, y, w, h, health, speed, flee;
+	public int flee;
+	int x, y, w, h, health, speed;
 	boolean alive, agro;
 	
 	public Enemy(int x, int y){
@@ -17,7 +17,7 @@ public class Enemy {
 		this.w = 8;
 		this.h = 8;
 		this.health = 100;
-		speed = 1;
+		this.speed = 1;
 		this.alive = true;
 		this.agro = true;
 		EntityGlobals.addEnemy(this);
@@ -67,8 +67,8 @@ public class Enemy {
 			flee--;
 		}
 		update(up,down,left,right);
-		if (Math.abs(playerY - this.y) + Math.abs(playerX - this.x) < 16){
-			flee = 90;
+		if (Math.abs(playerY - this.y) + Math.abs(playerX - this.x) < 16 && flee == 0){
+			flee = 100;
 			return true;
 		}
 		return false;
