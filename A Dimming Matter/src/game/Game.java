@@ -261,25 +261,25 @@ public class Game extends Canvas implements Runnable {
 			pixels[pix] = screen.pixels[pix];
 		}
 		
-		BufferedImage bimg = Game.image;
 		int brighten = 0;
 		int alpha = 0;
 		int redden = 0;
+		int flasht = fog.getFlashTimer();
+		int hurtt = fog.getHurtTimer();
 		
 		for (int y = 0; y < getWidth(); y++) {
             for (int x = 0; x < getHeight(); x++) {
-            	
             	alpha = fog.getAlpha(x, y);
-            	brighten = fog.getBrightness(x, y);
-            	redden = fog.getRedder(x, y);
             	if (alpha == 0){
-            		bimg.setRGB(y, x, 0 & 0);
-            	} else if (fog.getFlashTimer()==0 && fog.getHurtTimer()==0){
+            		Game.image.setRGB(y, x, 0 & 0);
+            	} else if (flasht==0 && hurtt==0){
             		Color c = new Color(Game.image.getRGB(y, x));
             		int argb = c.getRGB();
             		argb = (alpha << 24) | (argb & 0x00FFFFFF);
-            		bimg.setRGB(y, x, argb);
+            		Game.image.setRGB(y, x, argb);
             	} else {
+                	brighten = fog.getBrightness(x, y);
+                	redden = fog.getRedder(x, y);
 	            	Color c = new Color(Game.image.getRGB(y, x));
 	            	int re = c.getRed() + brighten;
 	            	int gr = c.getGreen() + brighten - redden;
@@ -295,12 +295,12 @@ public class Game extends Canvas implements Runnable {
 	            			gr,
 	            			bl,
 	            			alpha);
-	            	bimg.setRGB(y, x, c.getRGB());
+	            	Game.image.setRGB(y, x, c.getRGB());
 	            }
 			}
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
-		g.drawImage(bimg, 0, 0, getWidth(), getHeight(), null);
+		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
 		if (stage == Stage.LEVEL){ // draw UI
 			g.setColor(Color.YELLOW);
 			g.drawString("bombs: " +Integer.toString(player.getBombs()), 300, 10);
@@ -398,11 +398,11 @@ public class Game extends Canvas implements Runnable {
 			if(boom){
 				boom = false;
 				if(player.getBombs() > 0){//detonate bomb
-					fog.startFlash(200);
+					fog.startFlash(120);
 					player.modifyBomb(-1);
 					player.modifyHealth(-5);
 				}
-				else fog.startHurtFlash(200);
+				else fog.startHurtFlash(120);
 			}
 			player.update(up, down, left, right);
 			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
