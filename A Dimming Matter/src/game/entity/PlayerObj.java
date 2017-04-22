@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import game.Game;
 
 public class PlayerObj {
-	int mapx, mapy, w, h, health, ammo, bomb, range, speed;
+	int mapx, mapy, w, h, health, ammo, bomb, range, speed, money;
 	Direction direction;
 	
 	public PlayerObj(int mapx, int mapy){
@@ -19,6 +19,7 @@ public class PlayerObj {
 		this.range = 10;
 		this.direction = Direction.UP;
 		this.speed = 10;
+		this.money = 0;
 	}
 	
 	public int getHealth(){
@@ -44,6 +45,18 @@ public class PlayerObj {
 	public void modifyHealth(int num){
 		this.health += num;
 		if (this.health < 0) this.health = 0;
+	}
+	
+	public void addMoney( int moneyToAdd ){
+		this.money += moneyToAdd;
+	}
+	
+	public int getMoney(){
+		return this.money;
+	}
+	
+	public void spendMoney( int moneySpent ){
+		this.money -= moneySpent;
 	}
 	
 //	public void basicAttack(int mouseX, int mouseY){
