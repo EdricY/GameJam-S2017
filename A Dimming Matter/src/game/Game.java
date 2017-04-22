@@ -261,10 +261,7 @@ public class Game extends Canvas implements Runnable {
 			pixels[pix] = screen.pixels[pix];
 		}
 		
-		BufferedImage bimg = new BufferedImage(Game.WIDTH, Game.HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		for (int y = 0; y < getWidth(); y++)
-            for (int x = 0; x < getHeight(); x++)
-            	bimg.setRGB(y, x, Game.image.getRGB(y, x));
+		BufferedImage bimg = Game.image;
 		int brighten = 0;
 		int alpha = 0;
 		int redden = 0;
