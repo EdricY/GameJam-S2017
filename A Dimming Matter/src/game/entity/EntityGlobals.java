@@ -13,8 +13,8 @@ public class EntityGlobals {
 	
 	public static void resetMap(){
 		roundNumber += 1;
-		enemyList = new ArrayList();
-		wallList = new ArrayList();
+		enemyList = new ArrayList<Enemy>();
+		wallList = new ArrayList<Wall>();
 		mapArray = new GridObj[colCount][rowCount];
 		populateMap( roundNumber );
 	}

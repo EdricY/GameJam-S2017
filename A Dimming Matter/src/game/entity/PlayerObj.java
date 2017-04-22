@@ -1,11 +1,8 @@
 package game.entity;
 
-import java.awt.Color;
 import java.awt.Graphics;
 
 import game.Game;
-import game.gfx.Screen;
-import java.util.*;
 
 public class PlayerObj {
 	int mapx, mapy, w, h, health, ammo, bomb, range, speed;
