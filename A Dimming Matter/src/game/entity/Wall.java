@@ -9,19 +9,22 @@ import java.util.*;
 public class Wall implements GridObj{
 	
 	int x, y, w, h, row, col;
+	boolean indestructable;
 	
-	public Wall(int row, int col){
+	public Wall(int row, int col, boolean indestructable){
 		this.x = row * 30;
 		this.y = col * 30;
 		this.w = 30;
 		this.h = 30;
 		this.row = row;
 		this.col = col;
+		this.indestructable = indestructable;
 		EntityGlobals.addWall(this);
 	}
 	
 	public void destroyWall(){
-		EntityGlobals.getMapArray()[row][col] = new Tile(row, col);
+		if (!indestructable)
+			EntityGlobals.getMapArray()[row][col] = new Tile(row, col);
 	}
 	
 	public void draw(Graphics g)
@@ -44,5 +47,17 @@ public class Wall implements GridObj{
 		} else {
 			return "/wall2.png";
 		}
+	}
+
+	@Override
+	public int getR() {
+		// TODO Auto-generated method stub
+		return row;
+	}
+
+	@Override
+	public int getC() {
+		// TODO Auto-generated method stub
+		return col;
 	}
 }

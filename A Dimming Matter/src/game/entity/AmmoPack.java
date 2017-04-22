@@ -3,8 +3,9 @@ package game.entity;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
-public class AmmoPack implements GridObj{
+public class AmmoPack{
 	
 	int x, y, w, h, row, col, ammoContained;
 	boolean bombContained;
@@ -34,7 +35,7 @@ public class AmmoPack implements GridObj{
 		return "/ammo.png";
 	}
 
-	@Override
+	
 	public String getPath() {
 		return "/ammo.png";
 	}
