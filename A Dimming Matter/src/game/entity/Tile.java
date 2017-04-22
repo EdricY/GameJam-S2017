@@ -57,4 +57,9 @@ public class Tile implements GridObj {
 		return "/tile.png";
 	}
 
+	@Override
+	public String getPath() {
+		return "/tile.png";
+	}
+
 }

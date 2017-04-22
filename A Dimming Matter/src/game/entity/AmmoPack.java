@@ -34,4 +34,8 @@ public class AmmoPack implements GridObj{
 		return "/ammo.png";
 	}
 
+	@Override
+	public String getPath() {
+		return "/ammo.png";
+	}
 }

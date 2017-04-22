@@ -58,7 +58,7 @@ public class PlayerObj {
 //		ArrayList<GridObj> inRangeGridObjs = new ArrayList();
 //		int rangeChecked = 0;
 //		while (rangeChecked < this.range){
-//			this.row 
+//			
 //		}
 //	}
 	
