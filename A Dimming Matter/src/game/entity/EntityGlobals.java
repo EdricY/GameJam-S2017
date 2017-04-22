@@ -57,8 +57,9 @@ public class EntityGlobals {
 	public static ArrayList<Enemy> getEnemyList(){
 		return enemyList;
 	}
-	
-	
+	public static void setEnemyList(ArrayList<Enemy> al){
+		enemyList = al;
+	}
 	public static void addWall( Wall wall ){
 		wallList.add(wall);
 	}

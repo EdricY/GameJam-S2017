@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class Enemy {
 	public int flee;
-	int x, y, w, h, health, speed;
+	int x, y, w, h, health, speed, maxhealth;
 	boolean alive, agro;
 	
 	public Enemy(){
@@ -16,14 +16,20 @@ public class Enemy {
 		this.w = 8;
 		this.h = 8;
 		this.health = 100;
+		this.maxhealth = 100;
 		this.speed = 1;
 		this.alive = true;
 		this.agro = true;
 		EntityGlobals.addEnemy(this);
 	}
-	
+	public String getType(){
+		return "Joe";
+	}
 	public int getHealth(){
 		return this.health;
+	}
+	public int getMaxHealth(){
+		return this.maxhealth;
 	}
 	
 	public void dealDamage(int damage){
@@ -46,6 +52,12 @@ public class Enemy {
 	
 	public int getY(){
 		return this.y;
+	}
+	public int getW(){
+		return this.w;
+	}
+	public int getH(){
+		return this.h;
 	}
 	
 	public boolean update(int playerX, int playerY){

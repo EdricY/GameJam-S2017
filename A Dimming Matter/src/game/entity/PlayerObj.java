@@ -15,10 +15,10 @@ public class PlayerObj {
 		this.h = 16;
 		this.health = 100;
 		this.ammo = 12;
-		this.bomb = 3;
+		this.bomb = 30;
 		this.range = 10;
 		this.direction = Direction.UP;
-		this.speed = 1;
+		this.speed = 10;
 	}
 	
 	public int getHealth(){

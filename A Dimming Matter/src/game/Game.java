@@ -1,11 +1,13 @@
 package game;
 //butts
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 
+import game.entity.Boss;
 import game.entity.Enemy;
 import game.entity.EntityGlobals;
 import game.entity.Fog;
@@ -151,10 +154,11 @@ public class Game extends Canvas implements Runnable {
 	public int lastShotY;
 	public static int offsetX = 0;
 	public static int offsetY = 0;
-	public int peaceTimer = 100;
+	public int peaceTimer = 1200;
 	public static boolean nextWave = false;
 	
 	PlayerObj player;
+	Boss boss;
 	
 	/**
 	 * Creates the Game class
@@ -257,10 +261,12 @@ public class Game extends Canvas implements Runnable {
 					screen.render(i * 30 + offsetX, j * 30 + offsetY, ma[i][j].getPath());
 				}
 			}
+			
 			screen.render(player.getX()+offsetX - 8, player.getY()+offsetY - 8, "/player.png");
+			EntityGlobals.getEnemyList();
 			for (Enemy e : EntityGlobals.getEnemyList()) 
 				screen.render(e.getX()+offsetX-8, e.getY()+offsetY -8, "/enemy.png");
-			
+			screen.render(boss.getX()+offsetX - 16, boss.getY()+offsetY - 16, "/boss.png");
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -282,6 +288,8 @@ public class Game extends Canvas implements Runnable {
 		int flasht = fog.getFlashTimer();
 		int hurtt = fog.getHurtTimer();
 		
+		/*fog loop
+		/*/
 		for (int y = 0; y < getWidth(); y++) {
             for (int x = 0; x < getHeight(); x++) {
             	alpha = fog.getAlpha(x, y);
@@ -314,6 +322,7 @@ public class Game extends Canvas implements Runnable {
 	            }
 			}
 		}
+		/**/
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
@@ -336,6 +345,24 @@ public class Game extends Canvas implements Runnable {
 			g.drawString("Bombs: " +Integer.toString(player.getBombs()), 300, 10);
 			g.drawString("Ammo: " +Integer.toString(player.getAmmo()), 200, 10);
 			g.drawString("Health: " +Integer.toString(player.getHealth()), 100, 10);
+			
+			Graphics2D g2 = (Graphics2D) g;
+			g2.setStroke(new BasicStroke(3));
+			ArrayList<Enemy> enemyChangeBuffer = new ArrayList<Enemy>();
+			for (Enemy e : EntityGlobals.getEnemyList()){
+				enemyChangeBuffer.add(e);
+			}
+			for (Enemy e : enemyChangeBuffer){
+				if (e.getHealth() == e.getMaxHealth()) continue;
+				int ypos = e.getY()-e.getH()-3+offsetY;
+				int xpos = e.getX()-e.getW()+offsetX;
+				g.setColor(Color.RED);
+				g.drawLine(xpos, ypos, e.getX()+e.getW()+offsetX, ypos);
+				g.setColor(Color.GREEN);
+				float hfrac = ((float)e.getHealth())/((float)e.getMaxHealth());
+				g.drawLine(xpos, ypos, xpos + 2*(int)(hfrac * e.getW()), ypos);
+			}
+			EntityGlobals.setEnemyList(enemyChangeBuffer);
 		}
 //		switch (stage){
 //		case LEVEL:
@@ -393,12 +420,7 @@ public class Game extends Canvas implements Runnable {
 				mp3player.close();
 				mp3player.changeMusic("/SOUND_main_theme.mp3");
 				mp3player.play();
-				EntityGlobals.resetMap();	
-				int randX = 480 * (int)(Math.random() * 6);
-				int randY = 270 * (int)(Math.random() * 6);
-				offsetX = 8 - randX;
-				offsetY = 8 - randY;
-				player = new PlayerObj(248+randX , 143 + randY);
+				setupGame();
 				stage = Stage.LEVEL;
 			}
 			fog.update(mouseHoverX, mouseHoverY, 500);
@@ -449,7 +471,7 @@ public class Game extends Canvas implements Runnable {
 				if(player.getBombs() > 0){//detonate bomb
 					fog.startFlash(120);
 					player.modifyBomb(-1);
-					player.modifyHealth(-5);
+					player.modifyHealth((int)(-1 * (.06 * player.getHealth())));
 					int range = player.getHealth()/10;
 					explode(EntityGlobals.getMapArray()[player.getX()/30][player.getY()/30], range);
 				}
@@ -460,26 +482,32 @@ public class Game extends Canvas implements Runnable {
 			fcount %= 3;
 			if (fcount == 2){
 				for (Enemy e : EntityGlobals.getEnemyList()){
-					if (e.update(player.getX(), player.getY())){
+					if(e.getType().equals("Boss")){
+						if (((Boss)e).update(player.getX(), player.getY())){
+							player.modifyHealth(-10);
+							fog.startHurtFlash(40);
+						}
+					}
+					else if (e.update(player.getX(), player.getY())){
 						player.modifyHealth(-5);
 						fog.startHurtFlash(20);
 					}
 				}
 			}
 			if (peaceTimer > 0){
-				System.out.println("something1");
 				fog.update(player.getX() + offsetX, player.getY() + offsetY, 600);
 				peaceTimer--;
 				if (peaceTimer==0){//wave begins
-					System.out.println("something2");
 				}
 			}
+			else fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			if(peaceTimer==0 && nextWave){//wave ends
+				System.out.println("next Wave");
 				nextWave=false;
-				EntityGlobals.resetMap();
-				peaceTimer = 1000;
+				this.setupGame();
+				peaceTimer = 1200;
 			}
-			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
+			
 			if (shotTimer > 0) shotTimer--;
 			
 			if(player.getHealth() <= 0){
@@ -526,7 +554,7 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 	}
-	public void shoot(int mouseX, int mouseY){
+	public void shoot(int mouseX, int mouseY, int power){
 		if (shotTimer > 0) return;
 		if (player.getAmmo() < 10) return;
 		if ((mouseX- offsetX)/30 < 0 || (mouseX- offsetX)/30 >= 97)
@@ -536,9 +564,22 @@ public class Game extends Canvas implements Runnable {
 		
 		GridObj go = EntityGlobals.getMapArray()[(mouseX- offsetX)/30][(mouseY- offsetY)/30];
 		if (go.getType().equals("/tile.png")){
-			((Tile) go).setLight(1000);
-			((Tile) go).dealDamage();
-			((Tile) go).setLight(0);
+			if (((Tile) go).contains(boss.getX(), boss.getY()))
+				boss.dealDamage(power);
+			else if (((Tile) go).contains(boss.getX()-boss.getW()/2, boss.getY()-boss.getH()/2))
+				boss.dealDamage(power);
+			else if (((Tile) go).contains(boss.getX()+boss.getW()/2-1, boss.getY()-boss.getH()/2))
+				boss.dealDamage(power);
+			else if (((Tile) go).contains(boss.getX()-boss.getW()/2, boss.getY()+boss.getH()/2))
+				boss.dealDamage(power);
+			else if (((Tile) go).contains(boss.getX()+boss.getW()/2-1, boss.getY()+boss.getH()/2))
+				boss.dealDamage(power);
+			else{
+				((Tile) go).setLight(100);
+				((Tile) go).dealDamage();
+				((Tile) go).setLight(0);
+			}
+				
 			player.addAmmo(-10);
 			lastShotX=(mouseX- offsetX)/30;
 			lastShotY=(mouseY- offsetY)/30;
@@ -549,7 +590,7 @@ public class Game extends Canvas implements Runnable {
 	private void explode(GridObj go, int power){
 		if (power == 0) return;
 		if (go.getType().equals("/tile.png")){
-			((Tile) go).setLight(1);
+			((Tile) go).setLight(2);
 			((Tile) go).dealDamage();
 			((Tile) go).setLight(0);
 			if(go.getC()+1 < 55)
@@ -642,15 +683,34 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
+		setupGame();
+	}
+	public void setupGame(){
 		EntityGlobals.resetMap();	
-		
 		fog = new Fog();
 		int randX = 480 * (int)(Math.random() * 6);
 		int randY = 270 * (int)(Math.random() * 6);
 		offsetX = 8 - randX;
 		offsetY = 8 - randY;
 		player = new PlayerObj(248+randX , 143 + randY);
+		if(getRoomC(player.getX()) < 3 && getRoomR(player.getY()) < 3){
+			System.out.println("topleft");
+			
 		}
+		int randX2 = (int)(Math.random() * 2);
+		int randY2 = (int)(Math.random() * 2);
+		if (randX2 == 0) randX = 100;
+		else randX2 = 2850;
+		if (randY2 == 0)randY = 100;
+		else randY2 = 1560;
+		
+		if 		(randX2 == 100  && randY2 == 100  && randX < 1440 && randY < 810) randX2 = 2850;
+		else if (randX2 == 100  && randY2 == 1560 && randX < 1440 && randY > 810) randY2 = 100;
+		else if (randX2 == 2850 && randY2 == 100  && randX > 1440 && randY < 810) randY2 = 160;
+		else if (randX2 == 2850 && randY2 == 1560 && randX > 1440 && randY > 810) randX2 = 100;
+		boss = new Boss(randX2, randY2);
+		EntityGlobals.addEnemy(boss);
+	}
 	
 	public int getRoomR(int y){
 		return y/270;
