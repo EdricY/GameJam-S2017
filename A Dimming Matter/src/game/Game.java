@@ -228,7 +228,12 @@ public class Game extends Canvas implements Runnable {
 			break;
 		case LEVEL:
 			screen.render(0, 0, "/blank.png");
-
+			GridObj[][] ma = EntityGlobals.getMapArray();
+			for (int i = 0; i < ma.length; i++){
+				for (int j = 0; j < ma[0].length; j++){
+					
+				}
+			}
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -246,12 +251,6 @@ public class Game extends Canvas implements Runnable {
 		
 		BufferedImage bimg = Game.image;
 		int brighten = 0;
-//		brightenmap = new int[Game.HEIGHT][Game.WIDTH];
-//		for (int y = 0; y < bimg.getWidth(); y++) {
-//            for (int x = 0; x < bimg.getHeight(); x++) {
-//            	brightenmap[x][y] = fog.getBrightness(x, y);
-//            }
-//        }
 		
 		for (int y = 0; y < Game.image.getWidth(); y++) {
             for (int x = 0; x < Game.image.getHeight(); x++) {
@@ -276,18 +275,18 @@ public class Game extends Canvas implements Runnable {
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		g.drawImage(Game.image, 0, 0, getWidth(), getHeight(), null);
-		switch (stage){
-		case LEVEL:
-			GridObj[][] ma = EntityGlobals.getMapArray();
-			for (int i = 0; i < ma.length; i++)
-			{
-				for (int j = 0; j < ma[0].length; j++)
-				{
-					ma[i][j].draw(g);
-				}
-			}
-			break;
-		}
+//		switch (stage){
+//		case LEVEL:
+//			GridObj[][] ma = EntityGlobals.getMapArray();
+//			for (int i = 0; i < ma.length; i++)
+//			{
+//				for (int j = 0; j < ma[0].length; j++)
+//				{
+//					ma[i][j].draw(g);
+//				}
+//			}
+//			break;
+//		}
 		bs.show();
 	}
 
