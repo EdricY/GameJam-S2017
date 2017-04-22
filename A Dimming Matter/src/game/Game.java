@@ -466,7 +466,7 @@ public class Game extends Canvas implements Runnable {
 				17, 4, "/button_disabled.png", "/button_enabled.png", "/button_pressed.png") , BN.CREDITS);
 		buttons.get(BN.CREDITS).text = "Credits";
 		buttons.get(BN.CREDITS).state = Button.States.ENABLED;
-		EntityGlobals.resetEntityGlobals();				 
+		EntityGlobals.resetMap();				 
 		fog = new Fog();
 		}
 	

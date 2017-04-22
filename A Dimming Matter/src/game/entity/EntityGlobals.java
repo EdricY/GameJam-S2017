@@ -6,10 +6,37 @@ public class EntityGlobals {
 	static ArrayList<Enemy> enemyList;
 	static ArrayList<Wall> wallList;
 	static GridObj[][] mapArray;
+	static int roundNumber = 0;
+	static int rowCount = 6 * 9;
+	static int colCount = 6 * 16;
 	
-	public static void resetEntityGlobals(){
+	
+	public static void resetMap(){
+		roundNumber += 1;
 		enemyList = new ArrayList();
 		wallList = new ArrayList();
+		mapArray = new GridObj[rowCount][colCount];
+		populateMap( roundNumber );
+	}
+	
+	private static void populateMap( int currentRound ){
+		//Make the walls
+		int rollNum = 0;
+		for (int i = 0; i < rowCount; i++){
+			for (int j = 0; j < colCount; j++){
+				if ((i % 9 == 0) || (j % 16 == 0)){
+					if (Math.random() * 15 < 14){
+						mapArray[i][j] = new Wall(i, j);
+					} else {
+						mapArray[i][j] = new Tile(i, j);
+					}
+				} else if( Math.random() * 100 == 0){
+					mapArray[i][j] = new AmmoPack(i, j);
+				} else {
+					mapArray[i][j] = new Tile(i, j);
+				}
+			}
+		}
 	}
 
 	public static void addEnemy( Enemy enemy ){

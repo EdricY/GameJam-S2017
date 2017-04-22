@@ -7,7 +7,7 @@ import game.gfx.Screen;
 
 public class PlayerObj {
 	
-	int x, y, w, h, health, ammo;
+	int x, y, w, h, health, ammo, bomb;
 	
 	public PlayerObj(int x, int y){
 		this.x = x;
@@ -15,7 +15,8 @@ public class PlayerObj {
 		this.w = 24;
 		this.h = 24;
 		this.health = 100;
-		this.ammo = 100;
+		this.ammo = 12;
+		this.bomb = 0;
 	}
 	
 	public int getHealth(){
@@ -27,7 +28,11 @@ public class PlayerObj {
 	}
 	
 	public void addAmmo(int ammoAdded){
-		this.ammo = ammoAdded;
+		this.ammo += ammoAdded;
+	}
+	
+	public void addBomb(){
+		this.bomb += 1;
 	}
 	
 	public int getX(){
