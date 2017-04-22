@@ -242,7 +242,7 @@ public class Game extends Canvas implements Runnable {
 			GridObj[][] ma = EntityGlobals.getMapArray();
 			for (int i = 0; i < ma.length; i++){
 				for (int j = 0; j < ma[0].length; j++){
-					screen.render(i * 30 + offsetX, j * 30 + offsetY, ma[i][j].getType());
+					screen.render(i * 30 + offsetX, j * 30 + offsetY, ma[i][j].getPath());
 				}
 			}
 			screen.render(player.getX()+offsetX - 8, player.getY()+offsetY - 8, "/player.png");

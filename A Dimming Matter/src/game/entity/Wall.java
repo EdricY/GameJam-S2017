@@ -31,6 +31,11 @@ public class Wall implements GridObj{
 	}
 
 	public String getType() {
+		return "/wall.png";
+		// we dumb png for no reason
+	}
+	
+	public String getPath(){
 		int randomInd = ((int)Math.random() * 3);
 		if (randomInd == 0){
 			return "/wall0.png";
@@ -39,6 +44,5 @@ public class Wall implements GridObj{
 		} else {
 			return "/wall2.png";
 		}
-//		return "/wall0.png";
 	}
 }
