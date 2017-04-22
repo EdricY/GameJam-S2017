@@ -56,7 +56,7 @@ public class Screen {
 		sprites.add(new Sprite("/enemy.png"));
 		sprites.add(new Sprite("/gameover.png"));
 		sprites.add(new Sprite("/boss.png"));
-		sprites.add(new Sprite("/healthOrb.png"));	
+		sprites.add(new Sprite("/healthOrb.png"));
 		sprites.add(new Sprite("/hellportal.png"));
 		sprites.add(new Sprite("/pause.png"));
 		

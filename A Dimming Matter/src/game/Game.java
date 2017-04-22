@@ -333,7 +333,6 @@ public class Game extends Canvas implements Runnable {
 			}
 		}
 		/**/
-		System.out.println("a");
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setStroke(new BasicStroke(7));

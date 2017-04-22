@@ -86,7 +86,7 @@ public class Tile implements GridObj {
 		if (ammo == 0)
 			return "/tile.png";
 		else if (healthOrb == true){
-			return "/healthOrb";
+			return "/healthOrb.png";
 		} else {
 			return "/ammo.png";
 		}
