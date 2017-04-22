@@ -60,7 +60,7 @@ public class PlayerObj {
 //			
 //		}
 //	}
-	
+//	
 	public int getX(){
 		return this.mapx;
 	}
