@@ -25,12 +25,12 @@ public class EntityGlobals {
 		for (int i = 0; i < rowCount; i++){
 			for (int j = 0; j < colCount; j++){
 				if ((i % 16 == 0) || (j % 9 == 0)){
-					if (Math.random() * 15 < 14){
+					if ((int)(Math.random() * 15) < 14){
 						mapArray[i][j] = new Wall(i, j);
 					} else {
 						mapArray[i][j] = new Tile(i, j);
 					}
-				} else if( Math.random() * 100 == 0){
+				} else if((int)(Math.random() * 100) == 0){
 					mapArray[i][j] = new AmmoPack(i, j);
 				} else {
 					mapArray[i][j] = new Tile(i, j);

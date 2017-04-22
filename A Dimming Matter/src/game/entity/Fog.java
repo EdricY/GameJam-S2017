@@ -66,4 +66,7 @@ public class Fog {
 		flashmax = frames;
 		System.out.println("flash " + frames);
 	}
+	public int getFlashTimer(){
+		return flashtimer;
+	}
 }

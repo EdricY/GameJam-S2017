@@ -3,18 +3,17 @@ package game.entity;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import game.Game;
 import game.gfx.Screen;
 
 public class PlayerObj {
 	
-	int mapx, mapy, screenx, screeny, w, h, health, ammo, bomb, range, speed;
+	int mapx, mapy, w, h, health, ammo, bomb, range, speed;
 	Direction direction;
 	
 	public PlayerObj(int mapx, int mapy){
-		this.mapx = mapx;
+		this.mapx = mapx; //center, not edge
 		this.mapy = mapy;
-		this.screenx = 0;//480;
-		this.screeny = 0;//270;
 		this.w = 24;
 		this.h = 24;
 		this.health = 100;
@@ -22,7 +21,7 @@ public class PlayerObj {
 		this.bomb = 0;
 		this.range = 10;
 		this.direction = Direction.UP;
-		this.speed = 1;
+		this.speed = 10;
 	}
 	
 	public int getHealth(){
@@ -61,10 +60,21 @@ public class PlayerObj {
 		return this.direction;
 	}
 	public void update(boolean up, boolean down, boolean left, boolean right){
+		int prevX = mapx;
+		int prevY = mapy;
 		if(up) 		mapy-=speed;
 		if(down)	mapy+=speed;
 		if(left)	mapx-=speed;
 		if(right)	mapx+=speed;
+		if(mapx + Game.offsetX > Game.WIDTH - Game.WIDTH/4)
+			Game.offsetX -=speed;
+		if(mapy + Game.offsetY > Game.HEIGHT - Game.HEIGHT/4)
+			Game.offsetY -=speed;
+		if(mapx + Game.offsetX < Game.WIDTH/4)
+			Game.offsetX +=speed;
+		if(mapy + Game.offsetY < Game.HEIGHT/4)
+			Game.offsetY +=speed;
+		
 	}
 	public void draw(Graphics g){ 
 //		g.setColor(Color.WHITE);

@@ -143,8 +143,8 @@ public class Game extends Canvas implements Runnable {
 	public boolean right;
 	public boolean space;
 	public boolean spacePrev;
-	int offsetX = 0;
-	int offsetY = 0;
+	public static int offsetX = 0;
+	public static int offsetY = 0;
 	
 	PlayerObj player;
 	
@@ -243,10 +243,10 @@ public class Game extends Canvas implements Runnable {
 			GridObj[][] ma = EntityGlobals.getMapArray();
 			for (int i = 0; i < ma.length; i++){
 				for (int j = 0; j < ma[0].length; j++){
-					screen.render(i * 30, j * 30, ma[i][j].getType());
+					screen.render(i * 30 + offsetX, j * 30 + offsetY, ma[i][j].getType());
 				}
 			}
-			screen.render(player.getX(), player.getY(), "/player.png");
+			screen.render(player.getX()+offsetX - 12, player.getY()+offsetY - 12, "/player.png");
 		}
 		
 		if (fj != null) fj.render(screen);
@@ -264,26 +264,36 @@ public class Game extends Canvas implements Runnable {
 		
 		BufferedImage bimg = Game.image;
 		int brighten = 0;
+		int alpha = 0;
 		
 		for (int y = 0; y < Game.image.getWidth(); y++) {
             for (int x = 0; x < Game.image.getHeight(); x++) {
-            	Color c = new Color(Game.image.getRGB(y, x));
+            	
+            	alpha = fog.getAlpha(x, y);
             	brighten = fog.getBrightness(x, y);
-            	int re = c.getRed();
-            	int gr = c.getGreen();
-            	int bl = c.getBlue();
-            		re += fog.getBrightness(x, y);
-            		gr += fog.getBrightness(x, y);
-            		bl += fog.getBrightness(x, y);
-            	re = (re > 255) ? 255 : re;
-            	gr = (gr > 255) ? 255 : gr;
-            	bl = (bl > 255) ? 255 : bl;
-            	c = new Color(
-            			re,
-            			gr,
-            			bl,
-            			fog.getAlpha(x, y));
-            	Game.image.setRGB(y, x, c.getRGB());
+            	if (alpha == 0){
+            		Game.image.setRGB(y, x, 0 & 0);
+            	}
+            	else if (fog.getFlashTimer() == 0){
+            		Color c = new Color(Game.image.getRGB(y, x));
+            		int argb = c.getRGB();
+            		argb = (alpha << 24) | (argb & 0x00FFFFFF);
+            		Game.image.setRGB(y, x, argb);
+            	} else {
+	            	Color c = new Color(Game.image.getRGB(y, x));
+	            	int re = c.getRed() + brighten;
+	            	int gr = c.getGreen() + brighten;
+	            	int bl = c.getBlue() + brighten;
+	            	re = (re > 255) ? 255 : re;
+	            	gr = (gr > 255) ? 255 : gr;
+	            	bl = (bl > 255) ? 255 : bl;
+	            	c = new Color(
+	            			re,
+	            			gr,
+	            			bl,
+	            			alpha);
+	            	Game.image.setRGB(y, x, c.getRGB());
+            	}
             }
 		}
 		screen.lookupSprite("/blank.png").draw(g, 0, 0);
@@ -381,10 +391,12 @@ public class Game extends Canvas implements Runnable {
 			fog.update(mouseHoverX, mouseHoverY, 300);
 			break;
 		case LEVEL:
+			
 			if (mp3player.isIdle()) mp3player.play();
 			player.update(up, down, left, right);
 			
-			fog.update(player.getX(), player.getY(), 300);
+			spacePrev = space;
+			fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			break;
 		}
 		if(fj != null && !fj.isDone()) fj.tick();
@@ -502,12 +514,15 @@ public class Game extends Canvas implements Runnable {
 		EntityGlobals.resetMap();	
 		
 		fog = new Fog();
-		player = new PlayerObj(0,0);
+		player = new PlayerObj(252+480*(int)(Math.random() * 6) , 147 + 270 * (int)(Math.random() * 6));
 		
 		}
 	
-	public int distsq(int x1, int y1, int x2, int y2){
-		return ( (x1-x2)*(x1-x2) ) + ( (y1-y2)*(y1-y2) );
+	public int getRoomR(int y){
+		return y/270;
+	}
+	public int getRoomC(int x){
+		return x/480;
 	}
 	
 	private void playSound(String filename) {
