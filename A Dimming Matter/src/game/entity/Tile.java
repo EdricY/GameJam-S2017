@@ -19,7 +19,7 @@ public class Tile implements GridObj {
 		this.col = col;
 		this.light = 0;
 		this.ammo = 0;
-		this.healthOrb = true;
+		this.healthOrb = false;
 	}
 	
 	public void setLight(int Light){
@@ -67,6 +67,9 @@ public class Tile implements GridObj {
 	public void addHealthOrb(){
 		this.healthOrb = true;
 	}
+	public void removeHealthOrb(){
+		this.healthOrb = false;
+	}
 	
 	public boolean isHealthOrb(){
 		return this.healthOrb;
@@ -83,7 +86,7 @@ public class Tile implements GridObj {
 	}
 
 	public String getPath() {
-		if (ammo == 0)
+		if (ammo == 0 && healthOrb == false)
 			return "/tile.png";
 		else if (healthOrb == true){
 			return "/healthOrb.png";

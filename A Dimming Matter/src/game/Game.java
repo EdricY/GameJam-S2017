@@ -152,7 +152,7 @@ public class Game extends Canvas implements Runnable {
 	public int lastShotY;
 	public static int offsetX = 0;
 	public static int offsetY = 0;
-	public int peaceTimer = 1200;
+	public int peaceTimer = 500;
 	public static boolean nextWave = false;
 	
 	public static int upspeed=			0;
@@ -604,7 +604,7 @@ public class Game extends Canvas implements Runnable {
 				System.out.println("next Wave");
 				nextWave=false;
 				this.setupGame();
-				peaceTimer = 1200;
+				peaceTimer = 500;
 			}
 			
 			if (shotTimer > 0) shotTimer--;
@@ -856,15 +856,15 @@ public class Game extends Canvas implements Runnable {
 		}
 		int randX2 = (int)(Math.random() * 2);
 		int randY2 = (int)(Math.random() * 2);
-		if (randX2 == 0) randX = 100;
+		if (randX2 == 0) randX = 140;
 		else randX2 = 2850;
-		if (randY2 == 0)randY = 100;
+		if (randY2 == 0)randY = 140;
 		else randY2 = 1560;
 		
-		if 		(randX2 == 100  && randY2 == 100  && randX < 1440 && randY < 810) randX2 = 2850;
-		else if (randX2 == 100  && randY2 == 1560 && randX < 1440 && randY > 810) randY2 = 100;
-		else if (randX2 == 2850 && randY2 == 100  && randX > 1440 && randY < 810) randY2 = 160;
-		else if (randX2 == 2850 && randY2 == 1560 && randX > 1440 && randY > 810) randX2 = 100;
+		if 		(randX2 == 140  && randY2 == 140  && randX < 1440 && randY < 810) randX2 = 2850;
+		else if (randX2 == 140  && randY2 == 1560 && randX < 1440 && randY > 810) randY2 = 140;
+		else if (randX2 == 2850 && randY2 == 140  && randX > 1440 && randY < 810) randY2 = 160;
+		else if (randX2 == 2850 && randY2 == 1560 && randX > 1440 && randY > 810) randX2 = 140;
 		boss = new Boss(randX2, randY2);
 		EntityGlobals.addEnemy(boss);
 	}

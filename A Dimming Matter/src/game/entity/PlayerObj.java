@@ -129,6 +129,10 @@ public class PlayerObj {
 		if(playerTile() != null && playerTile().getType()=="/tile.png"){
 			if (((Tile)playerTile()).getAmmo() > 0)
 				((Tile)playerTile()).addAmmo(this);
+			if (((Tile)playerTile()).isHealthOrb()){
+				((Tile)playerTile()).removeHealthOrb();
+				this.health += .1*this.maxhealth;
+			}
 		}
 	}
 	public void draw(Graphics g){ 
