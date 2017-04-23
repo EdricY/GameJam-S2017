@@ -44,8 +44,10 @@ public class Enemy {
 	
 	private void killEnemy(){
 		EntityGlobals.removeEnemy( this );
+		if ((int)(Math.random() * 10) < 1 && EntityGlobals.getMapArray()[getX()/30][getY()/30].getType().equals("/tile.png")){
+			((Tile)EntityGlobals.getMapArray()[getX()/30][getY()/30]).addHealthOrb();
+		}
 	}
-	
 	public int getX(){
 		return this.x;
 	}
