@@ -135,7 +135,7 @@ public class Game extends Canvas implements Runnable {
 	FontJump fj;
 	
 	MP3 mp3player = new MP3();
-	MP3 soundeffects = new MP3();
+	static MP3 soundeffects = new MP3();
 	Fog fog;
 	int fcount;
 	int[][] brightenmap;
@@ -271,7 +271,6 @@ public class Game extends Canvas implements Runnable {
 			}
 			
 			screen.render(player.getX()+offsetX - 8, player.getY()+offsetY - 8, "/player.png");
-			EntityGlobals.getEnemyList();
 			for (Enemy e : EntityGlobals.getEnemyList()) 
 				screen.render(e.getX()+offsetX-8, e.getY()+offsetY -8, "/enemy.png");
 			screen.render(boss.getX()+offsetX - 16, boss.getY()+offsetY - 16, "/boss.png");
@@ -386,6 +385,8 @@ public class Game extends Canvas implements Runnable {
 			g.drawImage(shot, lastShotX*30 + offsetX, lastShotY*30+offsetY, null);
 			g.setColor(Color.YELLOW);
 			g.setFont(new java.awt.Font("Sylfaen", java.awt.Font.PLAIN, 12));
+			if (peaceTimer > 0)
+				g.drawString(Integer.toString(peaceTimer/10), 400, 10);
 			g.drawString("Bombs: " +Integer.toString(player.getBombs()), 300, 10);
 			g.drawString("Ammo: " +Integer.toString(player.getAmmo()), 200, 10);
 			g.drawString("Money: " +Integer.toString(player.getMoney()), 100, 10);
@@ -394,22 +395,18 @@ public class Game extends Canvas implements Runnable {
 			
 			g2 = (Graphics2D) g;
 			g2.setStroke(new BasicStroke(3));
-			ArrayList<Enemy> enemyChangeBuffer = new ArrayList<Enemy>();
-			for (Enemy e : EntityGlobals.getEnemyList()){
-				enemyChangeBuffer.add(e);
-			}
+
 			if (stage == Stage.LEVEL){
-			for (Enemy e : enemyChangeBuffer){
+			for (Enemy e : EntityGlobals.getEnemyList()){
 				if (e.getHealth() == e.getMaxHealth()) continue;
 				int ypos = e.getY()-e.getH()-3+offsetY;
 				int xpos = e.getX()-e.getW()+offsetX;
 				g.setColor(Color.RED);
 				g.drawLine(xpos, ypos, e.getX()+e.getW()+offsetX, ypos);
 				g.setColor(Color.GREEN);
-				float hfrac = ((float)e.getHealth())/((float)e.getMaxHealth());
+				double hfrac = ((double)e.getHealth())/((double)e.getMaxHealth());
 				g.drawLine(xpos, ypos, xpos + 2*(int)(hfrac * e.getW()), ypos);
-			}
-			EntityGlobals.setEnemyList(enemyChangeBuffer);
+			}		
 			}
 		}
 		bs.show();
@@ -435,7 +432,6 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (buttons.get(BN.INSTRUCTIONS).isClicked()){
 				fog.startFlash(100);
-				fcount = 65;
 				hideAll();
 				fj = new FontJump(buttons.get(BN.INSTRUCTIONS).getX(), buttons.get(BN.INSTRUCTIONS).getY(), "Smart Guy!", 100, 45.0, 30, false);
 				playSound("/Blip.wav");
@@ -502,14 +498,20 @@ public class Game extends Canvas implements Runnable {
 			break;
 		case PAUSE:
 			if (buttons.get(BN.UPSPEED).isClicked()){
-				if (player.getMoney() > 1 && upspeed < 5){
+				if (player.getMoney() >= 1 && upspeed < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.upspeed++;
 					fog.startFlash(60);
 				} else fog.startHurtFlash(60);
 			}
 			if (buttons.get(BN.UPHP).isClicked() ){
-				if (player.getMoney() > 1 && upmaxhealth < 5){
+				if (player.getMoney() >= 1 && upmaxhealth < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.upmaxhealth++;
 					player.modifyMaxHealth(10);
@@ -518,6 +520,9 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (buttons.get(BN.UPPOW).isClicked()){
 				if (player.getMoney() >= 1 && uppower < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.uppower++;
 					fog.startFlash(60);
@@ -525,6 +530,9 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (buttons.get(BN.UPAMMOCONS).isClicked()){
 				if (player.getMoney() >= 1 && upammoconserve < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.upammoconserve++;
 					fog.startFlash(60);
@@ -532,6 +540,9 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (buttons.get(BN.UPCRIT).isClicked()){
 				if (player.getMoney() >= 1 && upcrit < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.upcrit++;
 					fog.startFlash(60);
@@ -539,6 +550,9 @@ public class Game extends Canvas implements Runnable {
 			}
 			if (buttons.get(BN.UPFIRERATE).isClicked()){
 				if (player.getMoney() >= 1 && upfirerate < 5){
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/level_up.mp3");
+					this.soundeffects.play();
 					player.spendMoney(1);
 					this.upfirerate++;
 					fog.startFlash(60);
@@ -563,7 +577,7 @@ public class Game extends Canvas implements Runnable {
 			break;
 		case LEVEL:
 			if (mp3player.isIdle()) mp3player.play();
-			if(boom){
+			if(boom && peaceTimer==0){
 				boom = false;
 				if(player.getBombs() > 0){//detonate bomb
 					fog.startFlash(120);
@@ -572,6 +586,9 @@ public class Game extends Canvas implements Runnable {
 					int range = player.getHealth()/10;
 					if (range > 10) range = 10;
 					explode(EntityGlobals.getMapArray()[player.getX()/30][player.getY()/30], range);
+					this.soundeffects.close();
+					this.soundeffects.changeMusic("/explosion.mp3");
+					this.soundeffects.play();
 				}
 				//else fog.startHurtFlash(120);
 			}
@@ -579,11 +596,18 @@ public class Game extends Canvas implements Runnable {
 			fcount++;
 			fcount %= 3;
 			if (fcount == 2){
+				ArrayList<Enemy> enemyChangeBuffer = new ArrayList<Enemy>();
 				for (Enemy e : EntityGlobals.getEnemyList()){
+					enemyChangeBuffer.add(e);
+				}
+				for (Enemy e : enemyChangeBuffer){
 					if(e.getType().equals("Boss")){
 						if (((Boss)e).update(player.getX(), player.getY())){
 							player.modifyHealth(-10);
 							fog.startHurtFlash(40);
+							Enemy en = new Enemy(boss.getX(), boss.getY());
+							en.setSpeed(7);
+							EntityGlobals.getEnemyList().add(en);
 						}
 					}
 					else if (e.update(player.getX(), player.getY())){
@@ -591,6 +615,7 @@ public class Game extends Canvas implements Runnable {
 						fog.startHurtFlash(20);
 					}
 				}
+				EntityGlobals.setEnemyList(enemyChangeBuffer);
 			}
 			if (peaceTimer > 0){
 				fog.update(player.getX() + offsetX, player.getY() + offsetY, 600);
@@ -601,7 +626,10 @@ public class Game extends Canvas implements Runnable {
 			}
 			else fog.update(player.getX() + offsetX, player.getY() + offsetY, player.getHealth()*3);
 			if(peaceTimer==0 && nextWave){//wave ends
-				System.out.println("next Wave");
+				soundeffects.close();
+				soundeffects.changeMusic("/level_up.mp3");
+				soundeffects.play();
+				player.addMoney(1+ ((int)(Math.random() * 2)));
 				nextWave=false;
 				this.setupGame();
 				peaceTimer = 500;
@@ -678,6 +706,7 @@ public class Game extends Canvas implements Runnable {
 	
 	public void shoot(int mouseX, int mouseY, int power){
 		if (shotTimer > 0) return;
+		if (peaceTimer != 0) return;
 		if (player.getAmmo() < 10-this.upammoconserve) return;
 		if ((mouseX- offsetX)/30 < 0 || (mouseX- offsetX)/30 >= 97)
 			return;
@@ -711,6 +740,7 @@ public class Game extends Canvas implements Runnable {
 			lastShotX=(mouseX- offsetX)/30;
 			lastShotY=(mouseY- offsetY)/30;
 			shotTimer = shotTimerMax;
+			shootSound();
 		}
 		return;
 	}
@@ -733,7 +763,52 @@ public class Game extends Canvas implements Runnable {
 			((Wall) go).destroyWall();
 		}
 	}
-	
+	public static void ammoSound(){
+		int rand = (int)(Math.random()*4);
+		if (rand == 0){
+			soundeffects.close();
+			soundeffects.changeMusic("/get_ammo1.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 1){
+			soundeffects.close();
+			soundeffects.changeMusic("/get_ammo2.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 2){
+			soundeffects.close();
+			soundeffects.changeMusic("/get_ammo3.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 3){
+			soundeffects.close();
+			soundeffects.changeMusic("/get_ammo4.mp3");
+			soundeffects.play();
+		}
+	}
+	public static void shootSound(){
+		int rand = (int)(Math.random()*4);
+		if (rand == 0){
+			soundeffects.close();
+			soundeffects.changeMusic("/shoot1.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 1){
+			soundeffects.close();
+			soundeffects.changeMusic("/shoot2.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 2){
+			soundeffects.close();
+			soundeffects.changeMusic("/shoot3.mp3");
+			soundeffects.play();
+		}
+		else if (rand == 3){
+			soundeffects.close();
+			soundeffects.changeMusic("/shoot4.mp3");
+			soundeffects.play();
+		}
+	}
 	private void hideAll() {
 		for (final Button b : buttons.getAll()) {
 			b.state = Button.States.HIDDEN;
@@ -850,22 +925,26 @@ public class Game extends Canvas implements Runnable {
 		offsetX = 8 - randX;
 		offsetY = 8 - randY;
 		player = new PlayerObj(248+randX , 143 + randY);
-		if(getRoomC(player.getX()) < 3 && getRoomR(player.getY()) < 3){
-			System.out.println("topleft");
-			
-		}
-		int randX2 = (int)(Math.random() * 2);
-		int randY2 = (int)(Math.random() * 2);
-		if (randX2 == 0) randX = 140;
-		else randX2 = 2850;
-		if (randY2 == 0)randY = 140;
-		else randY2 = 1560;
+//		int randX2 = (int)(Math.random() * 2);
+//		int randY2 = (int)(Math.random() * 2);
+//		if (randX2 == 0) randX = 200;
+//		else if (randX2 == 1) randX2 = 2850;
+//		if (randY2 == 0)randY = 200;
+//		else if (randY2 == 1) randY2 = 1560;
 		
-		if 		(randX2 == 140  && randY2 == 140  && randX < 1440 && randY < 810) randX2 = 2850;
-		else if (randX2 == 140  && randY2 == 1560 && randX < 1440 && randY > 810) randY2 = 140;
-		else if (randX2 == 2850 && randY2 == 140  && randX > 1440 && randY < 810) randY2 = 160;
-		else if (randX2 == 2850 && randY2 == 1560 && randX > 1440 && randY > 810) randX2 = 140;
-		boss = new Boss(randX2, randY2);
+//		if 		(randX2 == 200  && randY2 == 200  && randX < 1440 && randY < 810) randX2 = 2850;
+//		else if (randX2 == 200  && randY2 == 1560 && randX < 1440 && randY > 810) randY2 = 200;
+//		else if (randX2 == 2850 && randY2 == 200  && randX > 1440 && randY < 810) randY2 = 200;
+//		else if (randX2 == 2850 && randY2 == 1560 && randX > 1440 && randY > 810) randX2 = 200;
+		int rand = (int) (Math.random() * 4); System.out.println(rand);
+		if(rand == 0)
+			boss = new Boss(100, 100);
+		else if(rand == 1)
+			boss = new Boss(2850, 100);
+		else if(rand == 2)
+			boss = new Boss(100, 1440);
+		else if(rand == 3)
+			boss = new Boss(2850, 1440);
 		EntityGlobals.addEnemy(boss);
 	}
 	

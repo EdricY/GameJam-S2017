@@ -29,7 +29,8 @@ public class Tile implements GridObj {
 	public void dealDamage(){
 		ArrayList<Enemy> listofEnemies = enemiesIn();
 		for( int i = 0; i < listofEnemies.size(); i++ ){
-			listofEnemies.get(i).dealDamage(this.light);
+			if(listofEnemies.get(i).getType().equals("Joe"))
+				listofEnemies.get(i).dealDamage(this.light);
 		}
 	}
 	

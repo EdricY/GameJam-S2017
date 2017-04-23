@@ -25,6 +25,9 @@ public class Enemy {
 	public String getType(){
 		return "Joe";
 	}
+	public void setSpeed(int num){
+		speed = num;
+	}
 	public int getHealth(){
 		return this.health;
 	}

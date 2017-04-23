@@ -12,7 +12,7 @@ public class Boss extends Enemy{
 		this.y = y;
 		this.health = 500;
 		this.maxhealth = 500;
-		speed = 1;
+		speed = 5;
 		this.w = 32;
 		this.h = 32;
 		this.hellPortalCounter = 0;
@@ -81,11 +81,16 @@ public class Boss extends Enemy{
 			down = playerY > this.y;
 			left = playerX < this.x;
 			right = playerX > this.x;
-			int rand = (int)(Math.random()*8);
+			int rand = (int)(Math.random()*10);
 			up ^= (rand == 1);
 			down ^= (rand == 2);
 			left ^= (rand == 3);
 			right ^= (rand == 4);
+			if (rand == 7){
+				Enemy e = new Enemy(this.x, this.y);
+				e.setSpeed(7);
+				EntityGlobals.enemyList.add(e);
+			}
 		}
 		else if (flee>0){
 			int rand = (int)(Math.random()*2);
@@ -98,7 +103,7 @@ public class Boss extends Enemy{
 		}
 		update(up,down,left,right);
 		if (taxidist < 32 && flee == 0){
-			flee = 50;
+			flee = 25;
 			return true;
 		}
 		return false;

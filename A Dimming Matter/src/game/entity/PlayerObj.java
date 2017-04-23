@@ -16,11 +16,11 @@ public class PlayerObj {
 		this.maxhealth = 100 + 10 * Game.upmaxhealth;
 		this.health = maxhealth;
 		this.ammo = 12;
-		this.bomb = 30;
+		this.bomb = 3;
 		this.range = 10;
 		this.direction = Direction.UP;
 		this.speed = 1 + Game.upspeed;
-		this.money = 15;
+		this.money = 3;
 	}
 	
 	public int getHealth(){
@@ -90,6 +90,8 @@ public class PlayerObj {
 		return this.direction;
 	}
 	public void update(boolean up, boolean down, boolean left, boolean right){
+		if (health > maxhealth) health--;
+		if (this.ammo < 10 && (int)(Math.random() * 50) == 0) this.addAmmo(1);
 		this.speed = 1 + Game.upspeed;
 		this.maxhealth = 100 + 10 * Game.upmaxhealth;
 		if(right)	mapx+=speed;
@@ -127,11 +129,14 @@ public class PlayerObj {
 		if(mapy + Game.offsetY < Game.HEIGHT/4)
 			Game.offsetY +=speed;
 		if(playerTile() != null && playerTile().getType()=="/tile.png"){
-			if (((Tile)playerTile()).getAmmo() > 0)
+			if (((Tile)playerTile()).getAmmo() > 0){
 				((Tile)playerTile()).addAmmo(this);
+				Game.ammoSound();
+			}
 			if (((Tile)playerTile()).isHealthOrb()){
 				((Tile)playerTile()).removeHealthOrb();
 				this.health += .1*this.maxhealth;
+				Game.ammoSound();
 			}
 		}
 	}

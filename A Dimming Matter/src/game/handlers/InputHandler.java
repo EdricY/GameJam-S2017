@@ -65,7 +65,8 @@ public class InputHandler implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			if (game.stage == Stage.LEVEL && space == false){
 				space = true;
-				game.boom = true;
+				if(game.peaceTimer==0)
+					game.boom = true;
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_TAB){

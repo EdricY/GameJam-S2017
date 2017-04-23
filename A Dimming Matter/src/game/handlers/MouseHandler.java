@@ -45,7 +45,7 @@ public class MouseHandler implements MouseListener, MouseMotionListener {
 			game.boom = true;
 		}
 		if (e.getButton() == MouseEvent.BUTTON1 && game.stage == Stage.LEVEL && x == Integer.MIN_VALUE && y == Integer.MIN_VALUE){
-			game.shoot(e.getX(), e.getY(), 10+5*Game.uppower);
+			game.shoot(e.getX(), e.getY(), 20+5*Game.uppower);
 		}
 		x = e.getX();
 		y = e.getY();
