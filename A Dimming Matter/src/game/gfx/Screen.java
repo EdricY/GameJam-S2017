@@ -41,11 +41,12 @@ public class Screen {
 	public Screen(int width, int height) {
 		// Sprites. Added here to guarantee their availability at runtime.
 		sprites.add(new Sprite("/icon.png"));
+		sprites.add(new Sprite("/circle.png"));
+		sprites.add(new Sprite("/blank.png"));
 		sprites.add(new Sprite("/background.png"));
 		sprites.add(new Sprite("/instructions.png"));
 		sprites.add(new Sprite("/credits.png"));
 		sprites.add(new Sprite("/fog.png"));
-		sprites.add(new Sprite("/blank.png"));
 		sprites.add(new Sprite("/ammo.png"));
 		sprites.add(new Sprite("/tile.png"));
 		sprites.add(new Sprite("/wall0.png"));
@@ -53,10 +54,13 @@ public class Screen {
 		sprites.add(new Sprite("/wall2.png"));
 		sprites.add(new Sprite("/player.png"));
 		sprites.add(new Sprite("/enemy.png"));
-		sprites.add(new Sprite("/circle.png"));
 		sprites.add(new Sprite("/gameover.png"));
 		sprites.add(new Sprite("/boss.png"));
-
+		sprites.add(new Sprite("/healthOrb.png"));
+		sprites.add(new Sprite("/hellportal.png"));
+		sprites.add(new Sprite("/pause.png"));
+		sprites.add(new Sprite("/critcircle.png"));
+		
 		// Sprite sheets. Added here to guarantee their availability at runtime.
 		spritesheets.add(new SpriteSheet("/font.png", 26, 4));
 		spritesheets.add(new SpriteSheet("/smallfont.png", 26, 4));

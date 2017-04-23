@@ -21,6 +21,7 @@ public class InputHandler implements KeyListener {
 
 	private final Game game;
 	public boolean space;
+	public boolean tab;
 
 	public InputHandler(Game game) {
 		game.addKeyListener(this);
@@ -42,7 +43,7 @@ public class InputHandler implements KeyListener {
 //			}
 //		}
 		if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_ESCAPE){
-			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS || game.stage == Stage.GAMEOVER)
+			if (game.stage == Stage.INSTRUCTIONS || game.stage == Stage.CREDITS || game.stage == Stage.GAMEOVER || game.stage == Stage.PAUSE)
 				game.backspace = true;
 		}
 		if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_W){
@@ -66,6 +67,11 @@ public class InputHandler implements KeyListener {
 				space = true;
 				game.boom = true;
 			}
+		}
+		if (e.getKeyCode() == KeyEvent.VK_TAB){
+			if (game.stage == Stage.LEVEL || game.stage == Stage.PAUSE)
+				game.togglePause();
+			tab = true;
 		}
 	}
 
@@ -116,6 +122,9 @@ public class InputHandler implements KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE){
 			if (game.stage == Stage.LEVEL)
 				space = false;
+		}
+		if (e.getKeyCode() == KeyEvent.VK_TAB){
+			tab = false;
 		}
 	}
 

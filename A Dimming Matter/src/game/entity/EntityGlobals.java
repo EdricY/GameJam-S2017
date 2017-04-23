@@ -10,6 +10,9 @@ public class EntityGlobals {
 	static int rowCount = 6 * 9 + 1;
 	static int colCount = 6 * 16 + 1;
 	
+	public static int getRoundNum(){
+		return roundNumber;
+	}
 	
 	public static void resetMap(){
 		roundNumber += 1;
@@ -34,7 +37,10 @@ public class EntityGlobals {
 					Tile t = new Tile(i, j);
 					t.setAmmo(12);
 					mapArray[i][j] = t;
-					enemyList.add(new Enemy(i*30, j*30));
+				} else if (currentRound < 12) { 
+					Tile t = new Tile(i, j);
+					mapArray[i][j] = t;
+
 				} else {
 					mapArray[i][j] = new Tile(i, j);
 				}
@@ -42,6 +48,14 @@ public class EntityGlobals {
 		}
 	}
 
+	public static void spawnEnemies( int currentRound ){
+		for (int i = 0; i < colCount; i++)
+		for (int j = 0; j < rowCount; j++)
+			if((int)(Math.random() * (150 - (currentRound * 15))) == 0){
+				enemyList.add(new Enemy(i*30, j*30));
+			}
+	}
+	
 	public static void addEnemy( Enemy enemy ){
 		enemyList.add(enemy);
 	}
